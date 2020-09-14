@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
+
 import com.example.ecopath.vo.MapPoint;
 import com.example.ecopath.ui.map.MapPointViewModel;
 import com.google.android.gms.maps.GoogleMap;
@@ -71,5 +72,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
 
         });
+
+//        categoryViewModel.setMapPointId("1");
+//        categoryViewModel.getAllCategories().observe( this, categories -> {
+//            if (!categories.status.name().equals("LOADING")) {
+//                new Toast(this);
+//            }
+//        });
     }
 }
