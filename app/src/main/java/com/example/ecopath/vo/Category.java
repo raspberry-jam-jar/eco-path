@@ -1,0 +1,38 @@
+package com.example.ecopath.vo;
+
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity()
+public class Category {
+    @NonNull
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    private Integer id;
+    @NonNull
+    private String name;
+    private String preview;
+    private String description;
+    // TODO create index
+    @NonNull
+    private Integer pointId;
+
+    public Category(@NonNull Integer id, @NonNull String name, @NonNull Integer pointId,
+                    String preview, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.preview = preview;
+        this.pointId = pointId;
+    }
+
+    @NonNull
+    public Integer getId() { return id; }
+    @NonNull
+    public String getName() { return name; }
+    public String getPreview() { return preview; }
+    public String getDescription() { return description; }
+    public Integer getPointId() { return pointId; }
+}
