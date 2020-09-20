@@ -48,14 +48,19 @@ public class CategoryRepository {
 
             @Override
             protected void saveCallResult(@NonNull List<CategoryWithImages> categories) {
-                db.beginTransaction();
+//                db.beginTransaction();
                 try {
                     for (CategoryWithImages categoryWithImages : categories) {
                         categoryDao.insert(categoryWithImages.category);
-                        imageDao.insertImages(categoryWithImages.imagesList);
+                        if (!categoryWithImages.imagesList.isEmpty()) {
+                            imageDao.insertImages(categoryWithImages.imagesList);
+                        }
                     }
+                }
+                catch (Exception e){
+                    System.out.println(e);
                 } finally {
-                    db.endTransaction();
+//                    db.endTransaction();
                 }
             }
 
@@ -67,7 +72,7 @@ public class CategoryRepository {
             protected LiveData<List<CategoryWithImages>> loadFromDb() {
                 return Transformations.switchMap(
                         categoryWithImagesDao.getAll(mapPointId), categories -> {
-                    if (categories == null) {
+                    if (categories == null || categories.isEmpty()) {
                         return AbsentLiveData.create();
                     } else {
                         return categoryWithImagesDao.getAll(mapPointId);

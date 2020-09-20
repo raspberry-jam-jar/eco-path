@@ -10,11 +10,13 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ecopath.MainActivity;
 import com.example.ecopath.R;
 import com.example.ecopath.di.Injectable;
+import com.example.ecopath.ui.category.CategoriesListFragment;
 import com.example.ecopath.vo.MapPoint;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -86,10 +88,10 @@ public class MapFragment extends Fragment implements Injectable, OnMapReadyCallb
                                     .position(pointCoordinates)
                                     .title(mapPoint.getName().toUpperCase())
                     );
+                    mapPointMarker.setTag(mapPoint.getId());
                     mapPointMarker.showInfoWindow();
                 }
                 mMap.setOnInfoWindowClickListener(this);
-
             }
 
         });
@@ -97,7 +99,21 @@ public class MapFragment extends Fragment implements Injectable, OnMapReadyCallb
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Toast.makeText(getActivity(), "Info window clicked: " + marker.getTitle(),
-                Toast.LENGTH_SHORT).show();
+        String categoryName =  marker.getTitle().toLowerCase();
+        categoryName = categoryName.substring(0, 1).toUpperCase() + categoryName.substring(1);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("category_name", categoryName);
+        bundle.putString("map_point_id", marker.getTag().toString());
+
+        CategoriesListFragment categoriesListFragment = new CategoriesListFragment();
+        categoriesListFragment.setArguments(bundle);
+
+        FragmentManager fragmentManager = Objects.requireNonNull(getActivity())
+                .getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.container, categoriesListFragment)
+                .commitAllowingStateLoss();
     }
 }

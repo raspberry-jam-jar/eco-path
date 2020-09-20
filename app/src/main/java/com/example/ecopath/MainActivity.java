@@ -25,11 +25,10 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
         AndroidInjection.inject(this);
         setContentView(R.layout.main_activity);
 
-
-
         MapFragment mapFragment = new MapFragment();
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
+                .addToBackStack(null)
                 .replace(R.id.container, mapFragment)
                 .commitAllowingStateLoss();
 

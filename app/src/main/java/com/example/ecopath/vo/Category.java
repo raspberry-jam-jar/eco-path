@@ -15,6 +15,9 @@ public class Category {
     private String name;
     private String preview;
     private String description;
+
+    private String imageSmallUrl;
+    private String imageBigUrl;
     // TODO create index
     @NonNull
     private Integer pointId;
@@ -35,4 +38,14 @@ public class Category {
     public String getPreview() { return preview; }
     public String getDescription() { return description; }
     public Integer getPointId() { return pointId; }
+    public String getImageSmallUrl() { return imageSmallUrl; }
+    public String getImageBigUrl() { return imageBigUrl; }
+
+    public void setImageSmallUrl(String imageSmallUrl) {
+        this.imageSmallUrl = imageSmallUrl;
+    }
+
+    public void setImageBigUrl(String imageBigUrl) {
+        this.imageBigUrl = imageBigUrl;
+    }
 }
