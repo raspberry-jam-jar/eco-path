@@ -33,27 +33,30 @@ public class CategoriesListDeserializer implements JsonDeserializer<List<Categor
             final String description = itemJsonObject.get("description").getAsString();
             final Integer pointId = itemJsonObject.get("point_id").getAsInt();
 
-            List imagesList = new ArrayList<>();
-            try {
-                JsonObject mainImageJson = itemJsonObject.get("image").getAsJsonObject();
-                JsonObject mainImageUrls = mainImageJson.get("thumbnails").getAsJsonObject();
-                imagesList.add(
-                        new Image(
-                                mainImageJson.get("id").getAsInt(),
-                                categoryId,
-                                mainImageUrls.get("150x100").getAsString(),
-                                mainImageUrls.get("300x300").getAsString(),
-                                true
-                        )
-                );
-            } catch (IllegalStateException e) {
-                System.out.println(e);
-            }
-
             CategoryWithImages category = new CategoryWithImages();
             category.setCategory(new Category(
                     categoryId, name, pointId, preview, description
             ));
+
+            List imagesList = new ArrayList<>();
+            try {
+                JsonObject mainImageJson = itemJsonObject.get("image").getAsJsonObject();
+                JsonObject mainImageUrls = mainImageJson.get("thumbnails").getAsJsonObject();
+//                imagesList.add(
+//                        new Image(
+//                                mainImageJson.get("id").getAsInt(),
+//                                categoryId,
+//                                mainImageUrls.get("150x100").getAsString(),
+//                                mainImageUrls.get("300x300").getAsString(),
+//                                true
+//                        )
+//                );
+                category.category.setImageSmallUrl(mainImageUrls.get("150x100").getAsString());
+                category.category.setImageBigUrl(mainImageUrls.get("300x300").getAsString());
+
+            } catch (IllegalStateException e) {
+                System.out.println(e);
+            }
             category.setImagesList(imagesList);
             categoriesList.add(category);
         }

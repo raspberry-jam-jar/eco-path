@@ -14,9 +14,10 @@ import dagger.android.AndroidInjectionModule;
 @Component(modules = {
         AndroidInjectionModule.class,
         AppModule.class,
-        MainActivityModule.class
+        MainActivityModule.class,
 })
-public interface AppComponent {
+public
+interface AppComponent {
     @Component.Builder
     interface Builder {
         @BindsInstance
