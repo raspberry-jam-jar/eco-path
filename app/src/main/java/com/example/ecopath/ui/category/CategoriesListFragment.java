@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingComponent;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -19,6 +20,7 @@ import com.example.ecopath.R;
 import com.example.ecopath.binding.FragmentDataBindingComponent;
 import com.example.ecopath.databinding.CategoriesListFragmentBinding;
 import com.example.ecopath.di.Injectable;
+import com.example.ecopath.vo.CategoryWithImages;
 
 import java.util.Objects;
 
@@ -51,6 +53,7 @@ public class CategoriesListFragment extends Fragment implements Injectable {
                         dataBindingComponent);
 
         adapter = new CategoriesListAdapter(dataBindingComponent);
+        adapter.setCallback(categoryClickCallback);
         binding.categoriesList.setAdapter(adapter);
 
         View viewRoot = binding.getRoot();
@@ -80,4 +83,23 @@ public class CategoriesListFragment extends Fragment implements Injectable {
         });
 
     }
+
+    private final CategoryClickCallback categoryClickCallback = new CategoryClickCallback() {
+        @Override
+        public void onClick(CategoryWithImages category) {
+            Bundle bundle = new Bundle();
+            bundle.putString("category_name", category.category.getName());
+            bundle.putInt("category_id", category.category.getId());
+
+            CategoryFragment categoryFragment = new CategoryFragment();
+            categoryFragment.setArguments(bundle);
+
+            FragmentManager fragmentManager = Objects.requireNonNull(getActivity())
+                    .getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.container, categoryFragment)
+                    .commitAllowingStateLoss();
+        }
+    };
 }
