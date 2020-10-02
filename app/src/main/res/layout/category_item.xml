@@ -5,6 +5,7 @@
     app:ignore="NamespaceTypo">
     <data>
         <variable name="categoryWithImages" type="com.example.ecopath.vo.CategoryWithImages"/>
+        <variable name="categoryClickCallback" type="com.example.ecopath.ui.category.CategoryClickCallback"/>
     </data>
     <androidx.cardview.widget.CardView
         android:layout_width="150dp"
@@ -13,7 +14,8 @@
         android:layout_marginBottom="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
         android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginTop="@dimen/default_margin">
+        android:layout_marginTop="@dimen/default_margin"
+        android:onClick="@{() ->  categoryClickCallback.onClick(categoryWithImages)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"

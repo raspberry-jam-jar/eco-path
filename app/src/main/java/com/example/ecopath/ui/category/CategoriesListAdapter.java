@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingComponent;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ public class CategoriesListAdapter extends
 
     private final DataBindingComponent dataBindingComponent;
     private List<CategoryWithImages> categoryWithImagesList;
+    private CategoryClickCallback categoryClickCallback;
 
     public CategoriesListAdapter(DataBindingComponent dataBindingComponent) {
         this.dataBindingComponent = dataBindingComponent;
@@ -31,6 +33,7 @@ public class CategoriesListAdapter extends
         CategoryItemBinding binding = DataBindingUtil
                 .inflate(LayoutInflater.from(parent.getContext()), R.layout.category_item,
                         parent, false, dataBindingComponent);
+        binding.setCategoryClickCallback(categoryClickCallback);
         return new CategoryItemViewHolder(binding);
     }
 
@@ -50,6 +53,11 @@ public class CategoriesListAdapter extends
     public void setCategoriesList(List<CategoryWithImages> categoriesList) {
         this.categoryWithImagesList = categoriesList;
         notifyDataSetChanged();
+    }
+
+    public void setCallback(@Nullable CategoryClickCallback categoryClickCallback) {
+        this.categoryClickCallback = categoryClickCallback;
+        setHasStableIds(true);
     }
 
     static class CategoryItemViewHolder extends RecyclerView.ViewHolder {
