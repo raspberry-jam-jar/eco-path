@@ -18,6 +18,7 @@ import javax.inject.Inject;
 public class CategoryViewModel extends ViewModel {
     private final MutableLiveData<String> mapPointId = new MutableLiveData<>();
     private LiveData<Resource<List<CategoryWithImages>>> allCategories;
+    private final MutableLiveData<CategoryWithImages> selectedCategory = new MutableLiveData<>();
 
     @Inject
     CategoryViewModel(CategoryRepository categoryRepository) {
@@ -35,4 +36,8 @@ public class CategoryViewModel extends ViewModel {
     }
 
     public LiveData<Resource<List<CategoryWithImages>>> getAllCategories() { return allCategories; }
+
+    public void select(CategoryWithImages category) { selectedCategory.setValue(category); }
+
+    public  LiveData<CategoryWithImages> getSelected() { return selectedCategory; }
 }

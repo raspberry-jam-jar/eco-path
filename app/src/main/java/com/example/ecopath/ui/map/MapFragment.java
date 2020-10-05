@@ -103,7 +103,7 @@ public class MapFragment extends Fragment implements Injectable, OnMapReadyCallb
         categoryName = categoryName.substring(0, 1).toUpperCase() + categoryName.substring(1);
 
         Bundle bundle = new Bundle();
-        bundle.putString("category_name", categoryName);
+        bundle.putString("main_category_name", categoryName);
         bundle.putString("map_point_id", marker.getTag().toString());
 
         CategoriesListFragment categoriesListFragment = new CategoriesListFragment();

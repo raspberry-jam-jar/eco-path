@@ -33,6 +33,7 @@ public class CategoriesListFragment extends Fragment implements Injectable {
     DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
     CategoriesListFragmentBinding binding;
     CategoriesListAdapter adapter;
+    String mainCategoryName;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -58,10 +59,10 @@ public class CategoriesListFragment extends Fragment implements Injectable {
 
         View viewRoot = binding.getRoot();
         assert getArguments() != null;
-        String categoryName = getArguments().getString("category_name");
+        mainCategoryName = getArguments().getString("main_category_name");
 
         appToolbar = (Toolbar) viewRoot.findViewById(R.id.include_toolbar);
-        appToolbar.setTitle(categoryName);
+        appToolbar.setTitle(mainCategoryName);
         appToolbar.setSubtitle("");
 
         return viewRoot;
@@ -73,7 +74,7 @@ public class CategoriesListFragment extends Fragment implements Injectable {
 
         ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(appToolbar);
         categoryViewModel = ViewModelProviders
-                .of(this, viewModelFactory)
+                .of(requireActivity(), viewModelFactory)
                 .get(CategoryViewModel.class);
         categoryViewModel.setMapPointId(getArguments().getString("map_point_id"));
         categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), resource -> {
@@ -87,9 +88,10 @@ public class CategoriesListFragment extends Fragment implements Injectable {
     private final CategoryClickCallback categoryClickCallback = new CategoryClickCallback() {
         @Override
         public void onClick(CategoryWithImages category) {
+            categoryViewModel.select(category);
+
             Bundle bundle = new Bundle();
-            bundle.putString("category_name", category.category.getName());
-            bundle.putInt("category_id", category.category.getId());
+            bundle.putString("main_category_name", mainCategoryName);
 
             CategoryFragment categoryFragment = new CategoryFragment();
             categoryFragment.setArguments(bundle);
