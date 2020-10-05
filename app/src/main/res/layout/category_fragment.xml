@@ -1,14 +1,96 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable name="categoryWithImages" type="com.example.ecopath.vo.CategoryWithImages"/>
+        <variable name="mainCategoryName" type="String"/>
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:orientation="vertical"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/main_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+        
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <include
-            android:id="@+id/include_toolbar"
-            layout="@layout/toolbar" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <com.google.android.material.appbar.CollapsingToolbarLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:expandedTitleMarginStart="@dimen/default_big_margin"
+                    app:expandedTitleMarginBottom="@dimen/default_big_margin"
+                    app:maxLines="2">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        app:imageUrl="@{categoryWithImages.category.imageBigUrl}"
+                        android:scaleType="centerCrop"
+                        android:adjustViewBounds="true"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="@string/category_image_description"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"
+                        android:layout_marginBottom="50dp"
+                        android:layout_marginEnd="@dimen/default_big_margin"
+                        android:layout_marginStart="@dimen/default_big_margin"
+                        android:layout_gravity="bottom"
+                        android:text="@{mainCategoryName}" />
+
+                    <com.google.android.material.appbar.MaterialToolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:popupTheme="@style/AppTheme.PopupOverlay"
+                        app:navigationIcon="@drawable/burger_24"
+                        android:title="@{categoryWithImages.category.name}"
+                        android:background="@android:color/transparent"/>
+
+                </com.google.android.material.appbar.CollapsingToolbarLayout>
+            </com.google.android.material.appbar.AppBarLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_big_margin">
+
+                <TextView
+                    android:id="@+id/preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:text="@{categoryWithImages.category.preview}"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:text="@{categoryWithImages.category.description}"
+                    app:layout_constraintTop_toBottomOf="@+id/preview" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
