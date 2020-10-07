@@ -3,6 +3,7 @@ package com.example.ecopath.api;
 import androidx.lifecycle.LiveData;
 
 import com.example.ecopath.vo.CategoryWithImages;
+import com.example.ecopath.vo.Image;
 
 import java.util.List;
 
@@ -22,4 +23,8 @@ public interface EcoPathDataService {
     @Headers({"X-Dront-Auth: "})
     @GET("points/{mapPointId}/positions")
     LiveData<ApiResponse<List<CategoryWithImages>>> listCategories(@Path("mapPointId") Integer mapPointId);
+
+    @Headers({"X-Dront-Auth: "})
+    @GET("positions/{categoryId}/images")
+    LiveData<ApiResponse<List<Image>>> listCategoryImages(@Path("categoryId") Integer categoryId);
 }

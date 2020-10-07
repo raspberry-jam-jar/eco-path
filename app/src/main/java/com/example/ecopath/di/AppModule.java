@@ -6,6 +6,7 @@ import androidx.room.Room;
 
 import com.example.ecopath.api.CategoriesListDeserializer;
 import com.example.ecopath.api.EcoPathDataService;
+import com.example.ecopath.api.ImagesListDeserializer;
 import com.example.ecopath.db.CategoryDao;
 import com.example.ecopath.db.CategoryWithImagesDao;
 import com.example.ecopath.db.EcoPathDB;
@@ -13,6 +14,7 @@ import com.example.ecopath.db.ImageDao;
 import com.example.ecopath.db.MapPointDao;
 import com.example.ecopath.util.LiveDataCallAdapterFactory;
 import com.example.ecopath.vo.CategoryWithImages;
+import com.example.ecopath.vo.Image;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -30,9 +32,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module(includes = ViewModelModule.class)
 class AppModule {
-    private static Converter.Factory createGsonConverter(Type type, Object typeAdapter) {
+    private static Converter.Factory createGsonConverter() {
         GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(type, typeAdapter);
+
+        Type category= new TypeToken<List<CategoryWithImages>>() {}.getType();
+        Object categoriesListDeserializer = new CategoriesListDeserializer();
+        gsonBuilder.registerTypeAdapter(category, categoriesListDeserializer);
+
+        Type image = new TypeToken<List<Image>>() {}.getType();
+        Object imagesListDeserializer = new ImagesListDeserializer();
+        gsonBuilder.registerTypeAdapter(image, imagesListDeserializer);
+
         Gson gson = gsonBuilder.create();
         return GsonConverterFactory.create(gson);
 
@@ -41,12 +51,9 @@ class AppModule {
     @Singleton
     @Provides
     EcoPathDataService provideEcoPathDataService() {
-        Type categoriesList = new TypeToken<List<CategoryWithImages>>() {}.getType();
-        Object categoriesListAdapter = new CategoriesListDeserializer();
-
         return new Retrofit.Builder()
                 .baseUrl("")
-                .addConverterFactory(createGsonConverter(categoriesList, categoriesListAdapter))
+                .addConverterFactory(createGsonConverter())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .build()
                 .create(EcoPathDataService.class);
