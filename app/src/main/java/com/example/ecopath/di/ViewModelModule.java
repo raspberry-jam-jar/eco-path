@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.ecopath.ui.category.CategoryViewModel;
+import com.example.ecopath.ui.image.ImageViewModel;
 import com.example.ecopath.ui.map.MapPointViewModel;
 import com.example.ecopath.viewmodel.EcoPathViewModelFactory;
 
@@ -22,6 +23,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(CategoryViewModel.class)
     abstract ViewModel bindCategoryViewModel(CategoryViewModel categoryViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ImageViewModel.class)
+    abstract ViewModel bindImageViewModel(ImageViewModel imageViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(EcoPathViewModelFactory factory);
