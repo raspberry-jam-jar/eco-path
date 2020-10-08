@@ -45,10 +45,9 @@ public class CategoriesListDeserializer implements JsonDeserializer<List<Categor
                 category.category.setImageSmallUrl(mainImageUrls.get("150x100").getAsString());
                 category.category.setImageBigUrl(mainImageUrls.get("300x300").getAsString());
 
-            } catch (IllegalStateException e) {
+            } catch (Exception e) {
                 System.out.println(e);
             }
-
             categoriesList.add(category);
         }
         return categoriesList;

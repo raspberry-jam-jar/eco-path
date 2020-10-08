@@ -26,19 +26,16 @@ public class CategoryRepository {
     private final EcoPathDB db;
     private final CategoryWithImagesDao categoryWithImagesDao;
     private final CategoryDao categoryDao;
-    private final ImageDao imageDao;
     private final EcoPathDataService ecoPathDataService;
     private final AppExecutors appExecutors;
 
     @Inject
     public CategoryRepository(AppExecutors appExecutors, EcoPathDB db,
                               CategoryWithImagesDao categoryWithImagesDao,
-                              CategoryDao categoryDao, ImageDao imageDao,
-                              EcoPathDataService ecoPathDataService) {
+                              CategoryDao categoryDao, EcoPathDataService ecoPathDataService) {
         this.db = db;
         this.categoryWithImagesDao = categoryWithImagesDao;
         this.categoryDao = categoryDao;
-        this.imageDao = imageDao;
         this.appExecutors = appExecutors;
         this.ecoPathDataService = ecoPathDataService;
     }
@@ -52,9 +49,6 @@ public class CategoryRepository {
                 try {
                     for (CategoryWithImages categoryWithImages : categories) {
                         categoryDao.insert(categoryWithImages.category);
-                        if (!categoryWithImages.imagesList.isEmpty()) {
-                            imageDao.insertImages(categoryWithImages.imagesList);
-                        }
                     }
                 }
                 catch (Exception e){

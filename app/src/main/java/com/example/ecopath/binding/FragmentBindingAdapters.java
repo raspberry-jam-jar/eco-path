@@ -24,8 +24,9 @@ public class FragmentBindingAdapters {
                     .load("https://tropa.tonchik-tm.ru" + url)
                     .placeholder(new ColorDrawable(Color.LTGRAY))
                     .into(imageView);
+        } else {
+            imageView.setBackgroundColor(Color.LTGRAY);
+            System.out.println("Empty url attribute");
         }
-        imageView.setBackgroundColor(Color.LTGRAY);
-        System.out.println("Empty url attribute");
     }
 }

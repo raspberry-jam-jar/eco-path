@@ -19,6 +19,7 @@ import com.example.ecopath.binding.FragmentDataBindingComponent;
 import com.example.ecopath.databinding.CategoryFragmentBinding;
 import com.example.ecopath.di.Injectable;
 import com.example.ecopath.ui.image.ImageClickCallback;
+import com.example.ecopath.ui.image.ImageFragment;
 import com.example.ecopath.ui.image.ImageViewModel;
 import com.example.ecopath.ui.image.ImagesListAdapter;
 import com.example.ecopath.vo.CategoryWithImages;
@@ -92,7 +93,16 @@ public class CategoryFragment extends Fragment implements Injectable {
     private final ImageClickCallback imageClickCallback = new ImageClickCallback() {
         @Override
         public void onClick(Image image) {
-            Bundle bundle = new Bundle();
+            imageViewModel.select(image);
+
+            ImageFragment imageFragment = new ImageFragment();
+
+            FragmentManager fragmentManager = Objects.requireNonNull(getActivity())
+                    .getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .addToBackStack(null)
+                    .replace(R.id.container, imageFragment)
+                    .commitAllowingStateLoss();
         }
     };
 }
