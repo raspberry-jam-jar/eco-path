@@ -34,7 +34,7 @@ public class ImagesListDeserializer implements JsonDeserializer<List<Image>> {
                                 imageUrls.get("300x300").getAsString()
                         )
                 );
-            } catch (IllegalStateException e) {
+            } catch (Exception e) {
                 System.out.println(e);
             }
         }

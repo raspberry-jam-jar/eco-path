@@ -10,7 +10,6 @@ import com.example.ecopath.api.ApiResponse;
 import com.example.ecopath.api.EcoPathDataService;
 import com.example.ecopath.db.ImageDao;
 import com.example.ecopath.util.AbsentLiveData;
-import com.example.ecopath.vo.CategoryWithImages;
 import com.example.ecopath.vo.Image;
 import com.example.ecopath.vo.Resource;
 
