@@ -18,6 +18,7 @@ import javax.inject.Inject;
 public class ImageViewModel extends ViewModel {
     private LiveData<Resource<List<Image>>> allImages;
     private final MutableLiveData<String> categoryId = new MutableLiveData<>();
+    private final MutableLiveData<Image> selectedImage = new MutableLiveData<>();
 
     @Inject
     ImageViewModel(ImageRepository imageRepository) {
@@ -35,4 +36,8 @@ public class ImageViewModel extends ViewModel {
     }
 
     public LiveData<Resource<List<Image>>> getAllImages() { return allImages; }
+
+    public void select(Image image) { selectedImage.setValue(image); }
+
+    public  LiveData<Image> getSelected() { return selectedImage; }
 }

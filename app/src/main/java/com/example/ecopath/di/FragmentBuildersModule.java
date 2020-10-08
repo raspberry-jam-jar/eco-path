@@ -2,6 +2,7 @@ package com.example.ecopath.di;
 
 import com.example.ecopath.ui.category.CategoriesListFragment;
 import com.example.ecopath.ui.category.CategoryFragment;
+import com.example.ecopath.ui.image.ImageFragment;
 import com.example.ecopath.ui.map.MapFragment;
 
 import dagger.Module;
@@ -17,4 +18,7 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract CategoryFragment contributeCategoryFragment();
+
+    @ContributesAndroidInjector
+    abstract ImageFragment contributeImageFragment();
 }

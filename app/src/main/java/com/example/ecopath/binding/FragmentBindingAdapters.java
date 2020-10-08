@@ -8,6 +8,8 @@ import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.ecopath.R;
 
 import javax.inject.Inject;
 
@@ -24,8 +26,9 @@ public class FragmentBindingAdapters {
                     .load("https://tropa.tonchik-tm.ru" + url)
                     .placeholder(new ColorDrawable(Color.LTGRAY))
                     .into(imageView);
+        } else {
+            System.out.println("Empty url attribute");
+            imageView.setBackgroundColor(Color.LTGRAY);
         }
-        imageView.setBackgroundColor(Color.LTGRAY);
-        System.out.println("Empty url attribute");
     }
 }
