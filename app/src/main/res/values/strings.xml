@@ -4,4 +4,29 @@
     <string name="main_toolbar_title">\«Марьина роща\»</string>
     <string name="main_toolbar_subtitle">Экологическая тропа</string>
     <string name="category_image_description">Category main image</string>
+    <string name="long_srt">I was tasked to create a simple media player app for a shop demo, and I’m
+        using the built-in SeekBar for the volume control. All goes well, until I want to change
+        the color of it. The design has it like the thumb of the SeekBar is white, and first half
+        is green and rest half is grey. It took me almost a whole day to find a satisfying anwser,
+        come on Android!But anyway, here is the simplest way that I can find.
+    I was tasked to create a simple media player app for a shop demo, and I’m
+        using the built-in SeekBar for the volume control. All goes well, until I want to change
+        the color of it. The design has it like the thumb of the SeekBar is white, and first half
+        is green and rest half is grey. It took me almost a whole day to find a satisfying anwser,
+        come on Android!But anyway, here is the simplest way that I can find.
+    I was tasked to create a simple media player app for a shop demo, and I’m
+        using the built-in SeekBar for the volume control. All goes well, until I want to change
+        the color of it. The design has it like the thumb of the SeekBar is white, and first half
+        is green and rest half is grey. It took me almost a whole day to find a satisfying anwser,
+        come on Android!But anyway, here is the simplest way that I can find.
+    I was tasked to create a simple media player app for a shop demo, and I’m
+        using the built-in SeekBar for the volume control. All goes well, until I want to change
+        the color of it. The design has it like the thumb of the SeekBar is white, and first half
+        is green and rest half is grey. It took me almost a whole day to find a satisfying anwser,
+        come on Android!But anyway, here is the simplest way that I can find.
+    I was tasked to create a simple media player app for a shop demo, and I’m
+        using the built-in SeekBar for the volume control. All goes well, until I want to change
+        the color of it. The design has it like the thumb of the SeekBar is white, and first half
+        is green and rest half is grey. It took me almost a whole day to find a satisfying anwser,
+        come on Android!But anyway, here is the simplest way that I can find.</string>
 </resources>

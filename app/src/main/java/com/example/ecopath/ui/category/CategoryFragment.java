@@ -1,12 +1,15 @@
 package com.example.ecopath.ui.category;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -44,7 +47,7 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
     MediaPlayer mediaPlayer = new MediaPlayer();
     SeekBar seekBar;
     boolean wasPlaying = false;
-    FloatingActionButton fab;
+    ImageButton fab;
     TextView seekBarHint;
 
     @Inject
@@ -71,7 +74,7 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
         adapter.setCallback(imageClickCallback);
         binding.imagesList.setAdapter(adapter);
 
-        fab = (FloatingActionButton) viewRoot.findViewById(R.id.fab);
+        fab = (ImageButton) viewRoot.findViewById(R.id.fab);
         seekBar = (SeekBar) viewRoot.findViewById(R.id.seekbar);
         seekBarHint = (TextView)  viewRoot.findViewById(R.id.seekBarHint);
 
@@ -190,7 +193,7 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
                                 .build()
                 );
 
-                mediaPlayer.setDataSource("" +
+                mediaPlayer.setDataSource("https://tropa.tonchik-tm.ru" +
                         binding.getCategoryWithImages().category.getAudioUrl());
 
                 mediaPlayer.prepare();

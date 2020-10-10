@@ -68,7 +68,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/preview"
@@ -101,41 +101,51 @@
                     android:text="@{categoryWithImages.category.description}"
                     app:layout_constraintTop_toBottomOf="@id/images_list" />
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_margin="16dp"
+            app:cardCornerRadius="30dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:background="@drawable/action_bar_bg">
+
+                <ImageButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="16dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@android:color/transparent"
+                    android:src="@android:drawable/ic_media_play"
+                    app:layout_constraintEnd_toStartOf="@id/seekbar"
+                    app:layout_constraintTop_toBottomOf="@id/description" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    tools:layout_editor_absoluteX="4dp"
-                    tools:layout_editor_absoluteY="315dp"
-                    app:layout_constraintBottom_toBottomOf="parent">
-
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
                     <SeekBar
                         android:id="@+id/seekbar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="16dp"
+                        android:layout_marginTop="21dp"
                         app:layout_constraintTop_toBottomOf="@id/description" />
 
                     <TextView
                         android:id="@+id/seekBarHint"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/seekbar" />
-
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
-                        android:src="@android:drawable/ic_media_play"
-                        app:layout_constraintEnd_toStartOf="@id/seekbar"
-                        app:layout_constraintTop_toBottomOf="@id/description" />
+                        android:textColor="@android:color/white"/>
                 </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
-
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
