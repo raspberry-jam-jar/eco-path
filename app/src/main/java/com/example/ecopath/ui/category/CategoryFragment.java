@@ -31,7 +31,6 @@ import com.example.ecopath.ui.image.ImageFragment;
 import com.example.ecopath.ui.image.ImageViewModel;
 import com.example.ecopath.ui.image.ImagesListAdapter;
 import com.example.ecopath.vo.Image;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Objects;
 
@@ -125,12 +124,25 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
                 seekBarHint.setVisibility(View.VISIBLE);
-                int x = (int) Math.ceil(progress / 1000f);
+                int time = (int) Math.ceil(progress / 1000f);
 
-                if (x < 10)
-                    seekBarHint.setText("0:0" + x);
+                int minutes = time / 60;
+                int seconds = time % 60;
+
+                String secondsText;
+                String minutesText;
+
+                if (seconds < 10)
+                    secondsText = "0" + seconds;
                 else
-                    seekBarHint.setText("0:" + x);
+                    secondsText = "" + seconds;
+
+                if (minutes < 10)
+                    minutesText = "0" + minutes;
+                else
+                    minutesText = "" + minutes;
+
+                seekBarHint.setText(minutesText + ":" + secondsText);
 
                 double percent = progress / (double) seekBar.getMax();
                 int offset = seekBar.getThumbOffset();
@@ -149,7 +161,6 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
                     );
                     seekBar.setProgress(0);
                 }
-
             }
 
             @Override
@@ -162,13 +173,10 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
     }
 
     public void playSong() {
-
         try {
-
-
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 clearMediaPlayer();
-                seekBar.setProgress(0);
+//                seekBar.setProgress(0);
                 wasPlaying = true;
                 fab.setImageDrawable(
                         ContextCompat.getDrawable(getContext(), android.R.drawable.ic_media_play)
@@ -193,7 +201,7 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
                                 .build()
                 );
 
-                mediaPlayer.setDataSource("https://tropa.tonchik-tm.ru" +
+                mediaPlayer.setDataSource("" +
                         binding.getCategoryWithImages().category.getAudioUrl());
 
                 mediaPlayer.prepare();
@@ -203,13 +211,10 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
 
                 mediaPlayer.start();
                 new Thread(this).start();
-
             }
-
             wasPlaying = false;
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
 
