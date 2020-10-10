@@ -109,9 +109,7 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                playSong();
-            }
+            public void onClick(View view) { playSong(); }
         });
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -144,15 +142,6 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
 
                 seekBarHint.setText(minutesText + ":" + secondsText);
 
-                double percent = progress / (double) seekBar.getMax();
-                int offset = seekBar.getThumbOffset();
-                int seekWidth = seekBar.getWidth();
-                int val = (int) Math.round(percent * (seekWidth - 2 * offset));
-                int labelWidth = seekBarHint.getWidth();
-                seekBarHint.setX(offset + seekBar.getX() + val
-                        - Math.round(percent * offset)
-                        - Math.round(percent * labelWidth / 2));
-
                 if (progress > 0 && mediaPlayer != null && !mediaPlayer.isPlaying()) {
                     clearMediaPlayer();
                     fab.setImageDrawable(
@@ -176,13 +165,11 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
         try {
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 clearMediaPlayer();
-//                seekBar.setProgress(0);
                 wasPlaying = true;
                 fab.setImageDrawable(
                         ContextCompat.getDrawable(getContext(), android.R.drawable.ic_media_play)
                 );
             }
-
 
             if (!wasPlaying) {
 
@@ -210,6 +197,11 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
                 seekBar.setMax(mediaPlayer.getDuration());
 
                 mediaPlayer.start();
+
+                if (seekBar.getProgress() > 0) {
+                    mediaPlayer.seekTo(seekBar.getProgress());
+                }
+
                 new Thread(this).start();
             }
             wasPlaying = false;
@@ -222,7 +214,6 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
 
         int currentPosition = mediaPlayer.getCurrentPosition();
         int total = mediaPlayer.getDuration();
-
 
         while (mediaPlayer != null && mediaPlayer.isPlaying() && currentPosition < total) {
             try {
