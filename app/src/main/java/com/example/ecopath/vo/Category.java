@@ -22,6 +22,8 @@ public class Category {
     @NonNull
     private Integer pointId;
 
+    private String audioUrl;
+
     public Category(@NonNull Integer id, @NonNull String name, @NonNull Integer pointId,
                     String preview, String description) {
         this.id = id;
@@ -40,6 +42,7 @@ public class Category {
     public Integer getPointId() { return pointId; }
     public String getImageSmallUrl() { return imageSmallUrl; }
     public String getImageBigUrl() { return imageBigUrl; }
+    public String getAudioUrl() { return audioUrl; }
 
     public void setImageSmallUrl(String imageSmallUrl) {
         this.imageSmallUrl = imageSmallUrl;
@@ -48,4 +51,5 @@ public class Category {
     public void setImageBigUrl(String imageBigUrl) {
         this.imageBigUrl = imageBigUrl;
     }
+    public void setAudioUrl(String audioUrl) { this.audioUrl = audioUrl; }
 }

@@ -1,12 +1,20 @@
 package com.example.ecopath.ui.category;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingComponent;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -22,7 +30,6 @@ import com.example.ecopath.ui.image.ImageClickCallback;
 import com.example.ecopath.ui.image.ImageFragment;
 import com.example.ecopath.ui.image.ImageViewModel;
 import com.example.ecopath.ui.image.ImagesListAdapter;
-import com.example.ecopath.vo.CategoryWithImages;
 import com.example.ecopath.vo.Image;
 
 import java.util.Objects;
@@ -31,10 +38,16 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
 
-public class CategoryFragment extends Fragment implements Injectable {
+public class CategoryFragment extends Fragment implements Injectable, Runnable {
     DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
     CategoryFragmentBinding binding;
     ImagesListAdapter adapter;
+
+    MediaPlayer mediaPlayer = new MediaPlayer();
+    SeekBar seekBar;
+    boolean wasPlaying = false;
+    ImageButton fab;
+    TextView seekBarHint;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -55,9 +68,14 @@ public class CategoryFragment extends Fragment implements Injectable {
                 .inflate(inflater, R.layout.category_fragment, container, false,
                         dataBindingComponent);
 
+        View viewRoot = binding.getRoot();
         adapter = new ImagesListAdapter(dataBindingComponent);
         adapter.setCallback(imageClickCallback);
         binding.imagesList.setAdapter(adapter);
+
+        fab = (ImageButton) viewRoot.findViewById(R.id.fab);
+        seekBar = (SeekBar) viewRoot.findViewById(R.id.seekbar);
+        seekBarHint = (TextView)  viewRoot.findViewById(R.id.seekBarHint);
 
         return  binding.getRoot();
     }
@@ -89,7 +107,143 @@ public class CategoryFragment extends Fragment implements Injectable {
 
         });
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { playSong(); }
+        });
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                seekBarHint.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {
+                seekBarHint.setVisibility(View.VISIBLE);
+                int time = (int) Math.ceil(progress / 1000f);
+
+                int minutes = time / 60;
+                int seconds = time % 60;
+
+                String secondsText;
+                String minutesText;
+
+                if (seconds < 10)
+                    secondsText = "0" + seconds;
+                else
+                    secondsText = "" + seconds;
+
+                if (minutes < 10)
+                    minutesText = "0" + minutes;
+                else
+                    minutesText = "" + minutes;
+
+                seekBarHint.setText(minutesText + ":" + secondsText);
+
+                if (progress > 0 && mediaPlayer != null && !mediaPlayer.isPlaying()) {
+                    clearMediaPlayer();
+                    fab.setImageDrawable(
+                            ContextCompat
+                                    .getDrawable(getActivity(), android.R.drawable.ic_media_play)
+                    );
+                    seekBar.setProgress(0);
+                }
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    mediaPlayer.seekTo(seekBar.getProgress());
+                }
+            }
+        });
     }
+
+    public void playSong() {
+        try {
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                clearMediaPlayer();
+                wasPlaying = true;
+                fab.setImageDrawable(
+                        ContextCompat.getDrawable(getContext(), android.R.drawable.ic_media_play)
+                );
+            }
+
+            if (!wasPlaying) {
+
+                if (mediaPlayer == null) {
+                    mediaPlayer = new MediaPlayer();
+                }
+
+                fab.setImageDrawable(ContextCompat
+                        .getDrawable(getContext(), android.R.drawable.ic_media_pause)
+                );
+
+                mediaPlayer.setAudioAttributes(
+                        new AudioAttributes.Builder()
+                                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                                .setUsage(AudioAttributes.USAGE_MEDIA)
+                                .build()
+                );
+
+                mediaPlayer.setDataSource("" +
+                        binding.getCategoryWithImages().category.getAudioUrl());
+
+                mediaPlayer.prepare();
+                mediaPlayer.setVolume(0.5f, 0.5f);
+                mediaPlayer.setLooping(false);
+                seekBar.setMax(mediaPlayer.getDuration());
+
+                mediaPlayer.start();
+
+                if (seekBar.getProgress() > 0) {
+                    mediaPlayer.seekTo(seekBar.getProgress());
+                }
+
+                new Thread(this).start();
+            }
+            wasPlaying = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void run() {
+
+        int currentPosition = mediaPlayer.getCurrentPosition();
+        int total = mediaPlayer.getDuration();
+
+        while (mediaPlayer != null && mediaPlayer.isPlaying() && currentPosition < total) {
+            try {
+                Thread.sleep(1000);
+                currentPosition = mediaPlayer.getCurrentPosition();
+            } catch (InterruptedException e) {
+                return;
+            } catch (Exception e) {
+                return;
+            }
+
+            seekBar.setProgress(currentPosition);
+
+        }
+    }
+
+    private void clearMediaPlayer() {
+        if (mediaPlayer != null ) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        clearMediaPlayer();
+    }
+
     private final ImageClickCallback imageClickCallback = new ImageClickCallback() {
         @Override
         public void onClick(Image image) {
