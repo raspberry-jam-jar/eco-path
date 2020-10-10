@@ -52,7 +52,7 @@ class AppModule {
     @Provides
     EcoPathDataService provideEcoPathDataService() {
         return new Retrofit.Builder()
-                .baseUrl("")
+                .baseUrl("https://tropa.tonchik-tm.ru/api/v1/")
                 .addConverterFactory(createGsonConverter())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .build()

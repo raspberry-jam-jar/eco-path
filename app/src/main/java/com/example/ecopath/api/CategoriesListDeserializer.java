@@ -49,6 +49,13 @@ public class CategoriesListDeserializer implements JsonDeserializer<List<Categor
                 System.out.println(e);
             }
 
+            try {
+                JsonObject audioJson = itemJsonObject.get("audio").getAsJsonObject();
+                category.category.setAudioUrl(audioJson.get("path").getAsString());
+            } catch (IllegalStateException e) {
+                System.out.println(e);
+            }
+
             categoriesList.add(category);
         }
         return categoriesList;
