@@ -7,22 +7,26 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingComponent;
 import androidx.databinding.DataBindingUtil;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
-import com.example.ecopath.MainActivity;
 import com.example.ecopath.R;
 import com.example.ecopath.binding.FragmentDataBindingComponent;
 import com.example.ecopath.databinding.CategoriesListFragmentBinding;
 import com.example.ecopath.di.Injectable;
 import com.example.ecopath.vo.CategoryWithImages;
-
-import java.util.Objects;
+import com.google.android.material.navigation.NavigationView;
 
 import javax.inject.Inject;
 
@@ -35,6 +39,8 @@ public class CategoriesListFragment extends Fragment implements Injectable {
     CategoriesListAdapter adapter;
     String mainCategoryName;
 
+    Activity activity;
+
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
@@ -44,6 +50,8 @@ public class CategoriesListFragment extends Fragment implements Injectable {
     public void onAttach(Activity activity) {
         AndroidInjection.inject(getActivity());
         super.onAttach(activity);
+
+        this.activity = activity;
     }
 
     @Override
@@ -65,14 +73,32 @@ public class CategoriesListFragment extends Fragment implements Injectable {
         appToolbar.setTitle(mainCategoryName);
         appToolbar.setSubtitle("");
 
+        setUpToolbar();
+
         return viewRoot;
+    }
+
+    private void setUpToolbar() {
+        NavigationView navigationView = activity.findViewById(R.id.nav_view);
+        AppCompatActivity mainActivity = ((AppCompatActivity) getActivity());
+        mainActivity.setSupportActionBar(appToolbar);
+
+        DrawerLayout drawer = activity.findViewById(R.id.drawer_layout);
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration
+                .Builder(R.id.mapFragment, R.id.categoriesListFragment, R.id.categoryFragment)
+                .setDrawerLayout(drawer)
+                .build();
+        NavController navController = NavHostFragment.findNavController(this);
+        NavigationUI.setupActionBarWithNavController(
+                mainActivity, navController, appBarConfiguration
+        );
+        NavigationUI.setupWithNavController(navigationView,navController);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((MainActivity) Objects.requireNonNull(getActivity())).setSupportActionBar(appToolbar);
         categoryViewModel = ViewModelProviders
                 .of(requireActivity(), viewModelFactory)
                 .get(CategoryViewModel.class);
@@ -93,15 +119,8 @@ public class CategoriesListFragment extends Fragment implements Injectable {
             Bundle bundle = new Bundle();
             bundle.putString("main_category_name", mainCategoryName);
 
-            CategoryFragment categoryFragment = new CategoryFragment();
-            categoryFragment.setArguments(bundle);
-
-            FragmentManager fragmentManager = Objects.requireNonNull(getActivity())
-                    .getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.container, categoryFragment)
-                    .commitAllowingStateLoss();
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                    .navigate(R.id.categoryFragment, bundle);
         }
     };
 }

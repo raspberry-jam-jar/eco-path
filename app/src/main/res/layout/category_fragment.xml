@@ -54,7 +54,6 @@
                         android:layout_height="?attr/actionBarSize"
                         app:layout_constraintTop_toTopOf="parent"
                         app:popupTheme="@style/AppTheme.PopupOverlay"
-                        app:navigationIcon="@drawable/burger_24"
                         android:title="@{categoryWithImages.category.name}"
                         android:background="@android:color/transparent"/>
 

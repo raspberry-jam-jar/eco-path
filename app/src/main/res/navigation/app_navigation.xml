@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_navigation"
+    app:startDestination="@+id/mapFragment">
+
+    <fragment
+    android:id="@+id/mapFragment"
+    android:name="com.example.ecopath.ui.map.MapFragment"
+    android:label="@string/app_name"
+    tools:layout="@layout/map_fragment" >
+        <action
+            android:id="@+id/action_mapFragment_to_categoriesListFragment"
+            app:destination="@id/categoriesListFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoriesListFragment"
+        android:name="com.example.ecopath.ui.category.CategoriesListFragment">
+        <action
+            android:id="@+id/action_categoriesListFragment_to_nav_category"
+            app:destination="@id/categoryFragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.ecopath.ui.category.CategoryFragment"
+        tools:layout="@layout/category_fragment" >
+        <action
+            android:id="@+id/action_categoryFragment_to_imageFragment"
+            app:destination="@id/imageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageFragment"
+        android:name="com.example.ecopath.ui.image.ImageFragment"
+        android:label="ImageFragment" />
+</navigation>
