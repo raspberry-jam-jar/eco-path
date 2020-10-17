@@ -5,4 +5,9 @@
     <string name="main_toolbar_subtitle">Экологическая тропа</string>
     <string name="category_image_description">Category main image</string>
     <string name="start_time">00:00</string>
+    <string name="nav_home">На главную</string>
+    <string name="about_project">О проекте</string>
+    <string name="downloads">Загрузки</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="customer_agreement">Пользовательское соглашение</string>
 </resources>

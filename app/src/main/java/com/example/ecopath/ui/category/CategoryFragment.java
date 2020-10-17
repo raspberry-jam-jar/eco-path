@@ -14,13 +14,21 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingComponent;
 import androidx.databinding.DataBindingUtil;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.ecopath.R;
 import com.example.ecopath.binding.FragmentDataBindingComponent;
@@ -31,8 +39,7 @@ import com.example.ecopath.ui.image.ImageFragment;
 import com.example.ecopath.ui.image.ImageViewModel;
 import com.example.ecopath.ui.image.ImagesListAdapter;
 import com.example.ecopath.vo.Image;
-
-import java.util.Objects;
+import com.google.android.material.navigation.NavigationView;
 
 import javax.inject.Inject;
 
@@ -49,6 +56,9 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
     ImageButton fab;
     TextView seekBarHint;
 
+    Activity activity;
+    private Toolbar appToolbar;
+
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
@@ -59,6 +69,8 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
     public void onAttach(Activity activity) {
         AndroidInjection.inject(getActivity());
         super.onAttach(activity);
+
+        this.activity = activity;
     }
 
     @Override
@@ -77,7 +89,28 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
         seekBar = (SeekBar) viewRoot.findViewById(R.id.seekbar);
         seekBarHint = (TextView)  viewRoot.findViewById(R.id.seekBarHint);
 
+        appToolbar = (Toolbar) viewRoot.findViewById(R.id.toolbar);
+
+        setUpToolbar();
+
         return  binding.getRoot();
+    }
+
+    private void setUpToolbar() {
+        NavigationView navigationView = activity.findViewById(R.id.nav_view);
+        AppCompatActivity mainActivity = ((AppCompatActivity) getActivity());
+        mainActivity.setSupportActionBar(appToolbar);
+
+        DrawerLayout drawer = activity.findViewById(R.id.drawer_layout);
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration
+                .Builder(R.id.mapFragment, R.id.categoriesListFragment, R.id.categoryFragment)
+                .setDrawerLayout(drawer)
+                .build();
+        NavController navController = NavHostFragment.findNavController(this);
+        NavigationUI.setupActionBarWithNavController(
+                mainActivity, navController, appBarConfiguration
+        );
+        NavigationUI.setupWithNavController(navigationView,navController);
     }
 
     @Override
@@ -249,14 +282,8 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
         public void onClick(Image image) {
             imageViewModel.select(image);
 
-            ImageFragment imageFragment = new ImageFragment();
-
-            FragmentManager fragmentManager = Objects.requireNonNull(getActivity())
-                    .getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .addToBackStack(null)
-                    .replace(R.id.container, imageFragment)
-                    .commitAllowingStateLoss();
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                    .navigate(R.id.imageFragment);
         }
     };
 }
