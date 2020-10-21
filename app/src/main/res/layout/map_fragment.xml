@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <include layout="@layout/toolbar" />
 
@@ -22,7 +23,7 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="634dp"
+        android:layout_height="0dp"
         map:cameraZoom="14"
         map:uiZoomControls="true"
         tools:context=".MainActivity"
@@ -32,40 +33,48 @@
         android:gravity="center_vertical|center_horizontal" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
         android:layout_marginBottom="18dp"
-        android:layout_weight="1"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="4dp">
 
         <ImageView
-            android:id="@+id/imageView4"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="4dp"
-            android:src="@drawable/logo" />
+            android:layout_height="35dp"
+            android:layout_marginHorizontal="1dp"
+            android:src="@drawable/logo_dront"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true" />
 
         <ImageView
-            android:id="@+id/imageView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="4dp"
-            android:src="@drawable/logo" />
+            android:layout_marginHorizontal="1dp"
+            android:src="@drawable/logo_museum"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_weight="1" />
 
         <ImageView
-            android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="4dp"
-            android:src="@drawable/logo" />
+            android:layout_marginHorizontal="1dp"
+            android:src="@drawable/logo_fpg"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_weight="1" />
 
         <ImageView
-            android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="4dp"
-            android:src="@drawable/logo" />
+            android:layout_marginHorizontal="1dp"
+            android:src="@drawable/logo_green_world"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_weight="1" />
+
     </LinearLayout>
 </LinearLayout>
