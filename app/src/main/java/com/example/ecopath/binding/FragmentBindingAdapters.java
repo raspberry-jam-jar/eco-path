@@ -3,6 +3,7 @@ package com.example.ecopath.binding;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.Fragment;
@@ -10,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 
 import javax.inject.Inject;
+
+import static android.text.Html.fromHtml;
 
 public class FragmentBindingAdapters {
     final Fragment fragment;
@@ -28,5 +31,10 @@ public class FragmentBindingAdapters {
             imageView.setBackgroundColor(Color.LTGRAY);
             System.out.println("Empty url attribute");
         }
+    }
+
+    @BindingAdapter("htmlText")
+    public void bindHtmlText(TextView textView, String htmlText) {
+        textView.setText(fromHtml(htmlText));
     }
 }
