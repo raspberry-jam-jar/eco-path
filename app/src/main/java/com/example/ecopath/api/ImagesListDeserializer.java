@@ -30,8 +30,8 @@ public class ImagesListDeserializer implements JsonDeserializer<List<Image>> {
                 categoryImagesList.add(
                         new Image(
                                 imageId,
-                                imageUrls.get("150x100").getAsString(),
-                                imageUrls.get("300x300").getAsString()
+                                imageUrls.get("small").getAsString(),
+                                imageUrls.get("common").getAsString()
                         )
                 );
             } catch (Exception e) {
