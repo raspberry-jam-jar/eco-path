@@ -44,7 +44,10 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
         NavigationView navigationView = findViewById(R.id.nav_view);
 
         appBarConfiguration = new AppBarConfiguration
-                .Builder(R.id.mapFragment, R.id.categoriesListFragment, R.id.categoryFragment)
+                .Builder(
+                        R.id.mapFragment, R.id.categoriesListFragment, R.id.categoryFragment,
+                        R.id.mapPointDownloadsFragment
+                )
                 .setDrawerLayout(drawer)
                 .build();
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -70,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
                 break;
             case R.id.infoFragment:
                 navController.navigate(R.id.infoFragment);
+		break;
+            case R.id.mapPointDownloadsFragment:
+                navController.navigate(R.id.mapPointDownloadsFragment);
                 break;
         }
         return true;

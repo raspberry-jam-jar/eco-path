@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_mapFragment_to_categoriesListFragment"
             app:destination="@id/categoriesListFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_mapPointDownloadsFragment"
+            app:destination="@id/mapPointDownloadsFragment" />
     </fragment>
 
     <fragment
@@ -39,4 +42,8 @@
     <fragment
         android:id="@+id/infoFragment"
         android:name="com.example.ecopath.ui.info.InfoFragment" />
+    <fragment    
+	android:id="@+id/mapPointDownloadsFragment"
+        android:name="com.example.ecopath.ui.map.MapPointDownloadsFragment"
+        android:label="@string/downloads_toolbar_title" />
 </navigation>

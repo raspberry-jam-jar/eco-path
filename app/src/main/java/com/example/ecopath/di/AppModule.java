@@ -1,15 +1,15 @@
 package com.example.ecopath.di;
 
 import android.app.Application;
-import android.content.res.Resources;
 
 import androidx.room.Room;
+import androidx.work.WorkManager;
 
 import com.example.ecopath.BuildConfig;
-import com.example.ecopath.R;
 import com.example.ecopath.api.CategoriesListDeserializer;
 import com.example.ecopath.api.EcoPathDataService;
 import com.example.ecopath.api.ImagesListDeserializer;
+import com.example.ecopath.api.MapPointListSerializer;
 import com.example.ecopath.db.CategoryDao;
 import com.example.ecopath.db.CategoryWithImagesDao;
 import com.example.ecopath.db.EcoPathDB;
@@ -18,6 +18,7 @@ import com.example.ecopath.db.MapPointDao;
 import com.example.ecopath.util.LiveDataCallAdapterFactory;
 import com.example.ecopath.vo.CategoryWithImages;
 import com.example.ecopath.vo.Image;
+import com.example.ecopath.vo.MapPoint;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -33,12 +34,14 @@ import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static android.provider.Settings.System.getString;
-
 @Module(includes = ViewModelModule.class)
 class AppModule {
     private static Converter.Factory createGsonConverter() {
         GsonBuilder gsonBuilder = new GsonBuilder();
+
+        Type mapPoint = new TypeToken<List<MapPoint>>() {}.getType();
+        Object mapPointListSerializer = new MapPointListSerializer();
+        gsonBuilder.registerTypeAdapter(mapPoint, mapPointListSerializer);
 
         Type category= new TypeToken<List<CategoryWithImages>>() {}.getType();
         Object categoriesListDeserializer = new CategoriesListDeserializer();
@@ -57,11 +60,16 @@ class AppModule {
     @Provides
     EcoPathDataService provideEcoPathDataService() {
         return new Retrofit.Builder()
-                .baseUrl(BuildConfig.SERVER_URL + BuildConfig.API_VERSION)
+                .baseUrl(BuildConfig.SERVER_URL)
                 .addConverterFactory(createGsonConverter())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .build()
                 .create(EcoPathDataService.class);
+    }
+
+    @Singleton @Provides
+    WorkManager provideWorkManager(Application app) {
+        return WorkManager.getInstance(app);
     }
 
     @Singleton @Provides

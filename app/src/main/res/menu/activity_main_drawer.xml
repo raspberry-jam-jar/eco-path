@@ -11,5 +11,9 @@
             android:id="@+id/infoFragment"
             android:icon="@drawable/ic_about_project"
             android:title="@string/about_project"/>
+        <item
+            android:id="@+id/mapPointDownloadsFragment"
+            android:icon="@drawable/ic_downloads"
+            android:title="@string/downloads"/>
     </group>
 </menu>
