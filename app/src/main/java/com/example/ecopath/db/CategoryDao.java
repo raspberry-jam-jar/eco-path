@@ -16,8 +16,8 @@ public interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insert(Category category);
 
-    @Update
-    public void update(Category... categories);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public void insertMany(Category... categories);
 
     @Query("DELETE from Category WHERE pointId=:mapPointId")
     public void delete(Integer mapPointId);

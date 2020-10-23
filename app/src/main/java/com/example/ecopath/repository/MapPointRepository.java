@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
 
 import com.example.ecopath.AppExecutors;
-import com.example.ecopath.api.ApiData;
 import com.example.ecopath.api.ApiResponse;
 import com.example.ecopath.api.EcoPathDataService;
 import com.example.ecopath.db.EcoPathDB;
@@ -15,6 +14,7 @@ import com.example.ecopath.util.AbsentLiveData;
 import com.example.ecopath.vo.MapPoint;
 import com.example.ecopath.vo.Resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -36,16 +36,50 @@ public class MapPointRepository {
         this.appExecutors = appExecutors;
     }
 
+    public LiveData<List<MapPoint>> getLoadedMapPoints() {
+        return mapPointDao.filterLoaded(true);
+    }
+
+    public LiveData<List<MapPoint>> getToBeLoadedMapPoints() {
+        return mapPointDao.filterLoaded(false);
+    }
+
+    public void update(MapPoint mapPoint) {
+        EcoPathDB.databaseWriteExecutor.execute(() -> {
+            mapPointDao.updateAll(mapPoint);
+        });
+    }
+
+    public void updateIsLoaded(MapPoint mapPoint) {
+        EcoPathDB.databaseWriteExecutor.execute(() -> {
+            mapPointDao.updateIsLoaded(mapPoint.getId(), mapPoint.getIsLoaded());
+        });
+    }
+
     public LiveData<Resource<List<MapPoint>>> getAllMapPoints() {
-        return new NetworkBoundResource<List<MapPoint>, ApiData>(appExecutors) {
+        return new NetworkBoundResource<List<MapPoint>, List<MapPoint>>(appExecutors) {
 
             @Override
-            protected void saveCallResult(@NonNull ApiData item) {
-                List<MapPoint> mapPoints = item.getApiPointsList();
+            protected void saveCallResult(@NonNull List<MapPoint> mapPoints) {
                 db.beginTransaction();
                 try {
-                    mapPointDao.deleteAllMapPoints();
-                    mapPointDao.insertMapPoints(mapPoints);
+                    List<Integer> actualIds = new ArrayList<>();
+
+                    for (MapPoint mapPoint : mapPoints) {
+                        actualIds.add(mapPoint.getId());
+
+                        if (mapPointDao.findById(mapPoint.getId()) == null) {
+                            mapPoint.setIsLoaded(false);
+                            mapPointDao.insert(mapPoint);
+                        } else {
+                            mapPointDao.update(
+                                    mapPoint.getId(), mapPoint.getName(), mapPoint.getLatitude(),
+                                    mapPoint.getLongitude(), mapPoint.getFullSize()
+                            );
+                        }
+                    }
+                    // TODO delete linked instances and files
+                    mapPointDao.deleteOutdated(actualIds);
                     db.setTransactionSuccessful();
                 } finally {
                     db.endTransaction();
@@ -53,7 +87,9 @@ public class MapPointRepository {
             }
 
             @Override
-            protected boolean shouldFetch(@Nullable List<MapPoint> data) { return true; }
+            protected boolean shouldFetch(@Nullable List<MapPoint> data) {
+                return true;
+            }
 
             @NonNull
             @Override
@@ -69,12 +105,12 @@ public class MapPointRepository {
 
             @NonNull
             @Override
-            protected LiveData<ApiResponse<ApiData>> createCall() {
+            protected LiveData<ApiResponse<List<MapPoint>>> createCall() {
                 return ecoPathDataService.listMapPoints();
             }
 
             @Override
-            protected ApiData processResponse(ApiResponse<ApiData> response) {
+            protected List<MapPoint> processResponse(ApiResponse<List<MapPoint>> response) {
                 return response.body;
             }
         }.asLiveData();

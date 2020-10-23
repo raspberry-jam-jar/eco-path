@@ -41,7 +41,13 @@ android {
 apply plugin: "androidx.navigation.safeargs"
 
 dependencies {
+    def work_version = "2.4.0"
+    implementation "androidx.work:work-runtime:$work_version"
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
+
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     implementation platform('com.google.firebase:firebase-bom:25.12.0')
     implementation 'com.google.firebase:firebase-analytics'
