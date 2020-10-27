@@ -1,9 +1,12 @@
 package com.example.ecopath.di;
 
 import android.app.Application;
+import android.content.res.Resources;
 
 import androidx.room.Room;
 
+import com.example.ecopath.BuildConfig;
+import com.example.ecopath.R;
 import com.example.ecopath.api.CategoriesListDeserializer;
 import com.example.ecopath.api.EcoPathDataService;
 import com.example.ecopath.api.ImagesListDeserializer;
@@ -30,6 +33,8 @@ import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.provider.Settings.System.getString;
+
 @Module(includes = ViewModelModule.class)
 class AppModule {
     private static Converter.Factory createGsonConverter() {
@@ -52,7 +57,7 @@ class AppModule {
     @Provides
     EcoPathDataService provideEcoPathDataService() {
         return new Retrofit.Builder()
-                .baseUrl("")
+                .baseUrl(BuildConfig.SERVER_URL + BuildConfig.API_VERSION)
                 .addConverterFactory(createGsonConverter())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .build()

@@ -30,6 +30,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.ecopath.BuildConfig;
 import com.example.ecopath.R;
 import com.example.ecopath.binding.FragmentDataBindingComponent;
 import com.example.ecopath.databinding.CategoryFragmentBinding;
@@ -221,7 +222,7 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
                                 .build()
                 );
 
-                mediaPlayer.setDataSource("" +
+                mediaPlayer.setDataSource(BuildConfig.SERVER_URL +
                         binding.getCategoryWithImages().category.getAudioUrl());
 
                 mediaPlayer.prepare();
