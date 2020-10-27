@@ -9,6 +9,7 @@ import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.ecopath.BuildConfig;
 
 import javax.inject.Inject;
 
@@ -24,7 +25,7 @@ public class FragmentBindingAdapters {
     public void bindImage(ImageView imageView, String url) {
         if (url != null){
             Glide.with(fragment)
-                    .load("https://tropa.tonchik-tm.ru" + url)
+                    .load(BuildConfig.SERVER_URL + url)
                     .placeholder(new ColorDrawable(Color.LTGRAY))
                     .into(imageView);
         } else {

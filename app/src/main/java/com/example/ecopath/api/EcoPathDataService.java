@@ -2,6 +2,7 @@ package com.example.ecopath.api;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.ecopath.BuildConfig;
 import com.example.ecopath.vo.CategoryWithImages;
 import com.example.ecopath.vo.Image;
 
@@ -15,16 +16,16 @@ import retrofit2.http.Path;
  * REST API access points
  */
 public interface EcoPathDataService {
-    // TODO remove after moving to the prod server
-    @Headers({"X-Dront-Auth: "})
+
+    @Headers({BuildConfig.AUTH_HEADER})
     @GET("points")
     LiveData<ApiResponse<ApiData>> listMapPoints();
 
-    @Headers({"X-Dront-Auth: "})
+    @Headers({BuildConfig.AUTH_HEADER})
     @GET("points/{mapPointId}/positions")
     LiveData<ApiResponse<List<CategoryWithImages>>> listCategories(@Path("mapPointId") Integer mapPointId);
 
-    @Headers({"X-Dront-Auth: "})
+    @Headers({BuildConfig.AUTH_HEADER})
     @GET("positions/{categoryId}/images")
     LiveData<ApiResponse<List<Image>>> listCategoryImages(@Path("categoryId") Integer categoryId);
 }
