@@ -36,19 +36,23 @@
 
             <TextView
                 android:id="@+id/privacy_policy"
+                android:tag="privacy_policy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textColor="@color/colorPrimary"
-                android:text="@string/privacy_policy" />
+                android:text="@string/privacy_policy"
+                android:onClick="openInfoFragment" />
 
             <TextView
                 android:id="@+id/customer_agreement"
+                android:tag="customer_agreement"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textColor="@color/colorPrimary"
-                android:text="@string/customer_agreement" />
+                android:text="@string/customer_agreement"
+                android:onClick="openInfoFragment" />
 
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>

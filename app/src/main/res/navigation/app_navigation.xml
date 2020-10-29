@@ -36,4 +36,7 @@
         android:id="@+id/imageFragment"
         android:name="com.example.ecopath.ui.image.ImageFragment"
         android:label="ImageFragment" />
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="com.example.ecopath.ui.info.InfoFragment" />
 </navigation>
