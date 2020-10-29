@@ -10,8 +10,13 @@ import androidx.navigation.ui.NavigationUI;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -63,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
             case R.id.mapFragment:
                 navController.navigate(R.id.mapFragment);
                 break;
+            case R.id.infoFragment:
+                navController.navigate(R.id.infoFragment);
+                break;
         }
         return true;
 
@@ -78,5 +86,30 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
     @Override
     public AndroidInjector<Object> androidInjector() {
         return androidInjector;
+    }
+
+    public void openInfoFragment(View view) {
+        drawer.closeDrawers();
+
+        String title = new String();
+        String url = new String();
+
+        switch (view.getTag().toString()) {
+            case "privacy_policy":
+                title = getString(R.string.privacy_policy);
+                url = getString(R.string.privacy_policy_url);
+                break;
+            case "customer_agreement":
+                title = getString(R.string.customer_agreement);
+                url = getString(R.string.customer_agreement_url);
+                break;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString("title", title);
+        bundle.putString("url", url);
+
+        Navigation.findNavController(this, R.id.nav_host_fragment)
+                .navigate(R.id.infoFragment, bundle);
     }
 }

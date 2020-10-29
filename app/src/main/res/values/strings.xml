@@ -7,7 +7,10 @@
     <string name="start_time">00:00</string>
     <string name="nav_home">На главную</string>
     <string name="about_project">О проекте</string>
-    <string name="downloads">Загрузки</string>
+    <string name="about_project_url">https://tropa.dront.ru/project/about/1</string>
     <string name="privacy_policy">Политика конфиденциальности</string>
+    <string name="privacy_policy_url">https://tropa.dront.ru/project/privacy/1</string>
     <string name="customer_agreement">Пользовательское соглашение</string>
+    <string name="customer_agreement_url">https://tropa.dront.ru/project/agree/1</string>
+    <string name="no_connection">Нет соединения с интернетом(</string>
 </resources>

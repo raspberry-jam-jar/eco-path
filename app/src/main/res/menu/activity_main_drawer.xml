@@ -8,13 +8,8 @@
             android:icon="@drawable/ic_home"
             android:title="@string/nav_home"/>
         <item
-            android:id="@+id/about_project"
+            android:id="@+id/infoFragment"
             android:icon="@drawable/ic_about_project"
             android:title="@string/about_project"/>
-        <item
-            android:id="@+id/downloads"
-            android:icon="@drawable/ic_downloads"
-            android:title="@string/downloads"
-            />
     </group>
 </menu>
