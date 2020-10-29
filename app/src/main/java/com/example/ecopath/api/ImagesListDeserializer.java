@@ -1,6 +1,7 @@
 package com.example.ecopath.api;
 
 import com.example.ecopath.vo.Image;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -35,7 +36,8 @@ public class ImagesListDeserializer implements JsonDeserializer<List<Image>> {
                         )
                 );
             } catch (Exception e) {
-                System.out.println(e);
+                FirebaseCrashlytics.getInstance()
+                        .log("Error while decoding image json in CategoriesListDeserializer");
             }
         }
         return categoryImagesList;

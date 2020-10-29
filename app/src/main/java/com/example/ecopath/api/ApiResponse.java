@@ -5,6 +5,8 @@ import android.util.ArrayMap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
@@ -39,12 +41,13 @@ public class ApiResponse<T> {
             body = response.body();
             errorMessage = null;
         } else {
+            FirebaseCrashlytics.getInstance().setCustomKey("error_response_code", code);
             String message = null;
             if (response.errorBody() != null) {
                 try {
                     message = response.errorBody().string();
                 } catch (IOException ignored) {
-//                    Timber.e(ignored, "error while parsing response");
+                    FirebaseCrashlytics.getInstance().log("Error while parsing error response");
                 }
             }
             if (message == null || message.trim().length() == 0) {
