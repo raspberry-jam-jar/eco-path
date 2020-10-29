@@ -8,15 +8,15 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -111,5 +111,16 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
 
         Navigation.findNavController(this, R.id.nav_host_fragment)
                 .navigate(R.id.infoFragment, bundle);
+    }
+
+    public void openUrl(View view) {
+        HashMap<String, String> map=new HashMap<String, String>();
+        map.put("dront", getString(R.string.dront_url));
+        map.put("fpg", getString(R.string.fpg_url));
+        map.put("green_world", getString(R.string.green_world_url));
+        map.put("museum", getString(R.string.museum_url));
+
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(map.get(view.getTag())));
+        startActivity(intent);
     }
 }

@@ -5,7 +5,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    tools:context=".MainActivity">
 
     <include layout="@layout/toolbar" />
 
@@ -42,39 +43,47 @@
         android:layout_marginHorizontal="4dp">
 
         <ImageView
+            android:tag="dront"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_marginHorizontal="1dp"
             android:src="@drawable/logo_dront"
             android:scaleType="fitCenter"
-            android:adjustViewBounds="true" />
+            android:adjustViewBounds="true"
+            android:onClick="openUrl" />
 
         <ImageView
+            android:tag="museum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="1dp"
             android:src="@drawable/logo_museum"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="openUrl"/>
 
         <ImageView
+            android:tag="fpg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="1dp"
             android:src="@drawable/logo_fpg"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="openUrl"/>
 
         <ImageView
+            android:tag="green_world"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="1dp"
             android:src="@drawable/logo_green_world"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:onClick="openUrl"/>
 
     </LinearLayout>
 </LinearLayout>

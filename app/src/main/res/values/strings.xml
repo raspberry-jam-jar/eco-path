@@ -13,4 +13,8 @@
     <string name="customer_agreement">Пользовательское соглашение</string>
     <string name="customer_agreement_url">https://tropa.dront.ru/project/agree/1</string>
     <string name="no_connection">Нет соединения с интернетом(</string>
+    <string name="dront_url">https://dront.ru/</string>
+    <string name="fpg_url">https://президентскиегранты.рф/</string>
+    <string name="green_world_url">https://dront.ru/item/ekologicheskoe-obedinenie-zelenyj-mir/</string>
+    <string name="museum_url">http://new1.hutor-museum.ru</string>
 </resources>
