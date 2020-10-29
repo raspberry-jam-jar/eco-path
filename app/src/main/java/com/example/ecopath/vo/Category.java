@@ -52,4 +52,6 @@ public class Category {
         this.imageBigUrl = imageBigUrl;
     }
     public void setAudioUrl(String audioUrl) { this.audioUrl = audioUrl; }
+
+    public Boolean hasAudioUrl() { return this.audioUrl != null; }
 }
