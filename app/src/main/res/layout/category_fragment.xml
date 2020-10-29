@@ -98,7 +98,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/default_big_margin"
                     app:htmlText="@{categoryWithImages.category.description}"
-                    app:layout_constraintTop_toBottomOf="@id/images_list" />
+                    app:layout_constraintTop_toBottomOf="@id/images_list"
+                    android:paddingBottom="100dp"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
