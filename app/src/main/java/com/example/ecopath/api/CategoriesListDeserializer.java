@@ -3,6 +3,7 @@ package com.example.ecopath.api;
 import com.example.ecopath.vo.Category;
 import com.example.ecopath.vo.CategoryWithImages;
 import com.example.ecopath.vo.Image;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -46,14 +47,16 @@ public class CategoriesListDeserializer implements JsonDeserializer<List<Categor
                 category.category.setImageBigUrl(mainImageUrls.get("common").getAsString());
 
             } catch (Exception e) {
-                System.out.println(e);
+                FirebaseCrashlytics.getInstance()
+                        .log("Error while decoding image json in CategoriesListDeserializer");
             }
 
             try {
                 JsonObject audioJson = itemJsonObject.get("audio").getAsJsonObject();
                 category.category.setAudioUrl(audioJson.get("path").getAsString());
             } catch (IllegalStateException e) {
-                System.out.println(e);
+                FirebaseCrashlytics.getInstance()
+                        .log("Error while decoding audio json in CategoriesListDeserializer");
             }
 
             categoriesList.add(category);

@@ -41,6 +41,7 @@ import com.example.ecopath.ui.image.ImageViewModel;
 import com.example.ecopath.ui.image.ImagesListAdapter;
 import com.example.ecopath.vo.Image;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import javax.inject.Inject;
 
@@ -240,7 +241,7 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
             }
             wasPlaying = false;
         } catch (Exception e) {
-            e.printStackTrace();
+            FirebaseCrashlytics.getInstance().recordException(e);
         }
     }
 
