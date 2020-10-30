@@ -26,16 +26,18 @@ public class CategoryRepository {
     private final EcoPathDB db;
     private final CategoryWithImagesDao categoryWithImagesDao;
     private final CategoryDao categoryDao;
+    private final ImageDao imageDao;
     private final EcoPathDataService ecoPathDataService;
     private final AppExecutors appExecutors;
 
     @Inject
-    public CategoryRepository(AppExecutors appExecutors, EcoPathDB db,
+    public CategoryRepository(AppExecutors appExecutors, EcoPathDB db, ImageDao imageDao,
                               CategoryWithImagesDao categoryWithImagesDao,
                               CategoryDao categoryDao, EcoPathDataService ecoPathDataService) {
         this.db = db;
         this.categoryWithImagesDao = categoryWithImagesDao;
         this.categoryDao = categoryDao;
+        this.imageDao = imageDao;
         this.appExecutors = appExecutors;
         this.ecoPathDataService = ecoPathDataService;
     }
@@ -49,6 +51,7 @@ public class CategoryRepository {
                 try {
                     categoryDao.delete(mapPointId);
                     for (CategoryWithImages categoryWithImages : categories) {
+                        imageDao.delete(categoryWithImages.category.getId());
                         categoryDao.insert(categoryWithImages.category);
                     }
                 }
