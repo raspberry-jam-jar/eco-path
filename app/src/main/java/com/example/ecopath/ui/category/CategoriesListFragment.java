@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -36,6 +37,7 @@ import dagger.android.AndroidInjection;
 
 public class CategoriesListFragment extends Fragment implements Injectable {
     private Toolbar appToolbar;
+    private ProgressBar progressBar;
     DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
     CategoriesListFragmentBinding binding;
     CategoriesListAdapter adapter;
@@ -77,6 +79,9 @@ public class CategoriesListFragment extends Fragment implements Injectable {
 
         setUpToolbar();
 
+        progressBar = (ProgressBar) viewRoot.findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
+
         return viewRoot;
     }
 
@@ -111,7 +116,11 @@ public class CategoriesListFragment extends Fragment implements Injectable {
         categoryViewModel.setMapPointId(getArguments().getString("map_point_id"));
         categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), resource -> {
             if (!resource.status.name().equals("LOADING")) {
+                progressBar.setVisibility(View.GONE);
                 adapter.setCategoriesList(resource.data);
+            } else if (resource.status.name().equals("ERROR")) {
+                Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
             }
         });
 

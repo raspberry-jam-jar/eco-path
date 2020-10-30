@@ -10,15 +10,9 @@
 
     <include layout="@layout/toolbar" />
 
-    <TextView
-        android:id="@+id/loading_map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center_vertical|center_horizontal"
-        android:text="Loading..."
-        android:visibility="gone"
-        android:textAlignment="center" />
+    <include
+        android:id="@+id/progress_bar"
+        layout="@layout/progress_bar" />
 
     <fragment
         android:id="@+id/map"
