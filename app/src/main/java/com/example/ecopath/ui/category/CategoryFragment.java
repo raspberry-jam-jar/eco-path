@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +63,7 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
 
     Activity activity;
     private Toolbar appToolbar;
+    private ProgressBar progressBar;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -96,6 +98,9 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
         appToolbar = (Toolbar) viewRoot.findViewById(R.id.toolbar);
 
         setUpToolbar();
+
+        progressBar = (ProgressBar) viewRoot.findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
 
         return  binding.getRoot();
     }
@@ -142,7 +147,11 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
             imageViewModel.setCategoryId(String.valueOf(categoryId));
             imageViewModel.getAllImages().observe(getViewLifecycleOwner(), resource -> {
                 if (!resource.status.name().equals("LOADING")) {
+                    progressBar.setVisibility(View.GONE);
                     adapter.setImagesList(resource.data);
+                } else if (resource.status.name().equals("ERROR")) {
+                    Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                 }
             });
 

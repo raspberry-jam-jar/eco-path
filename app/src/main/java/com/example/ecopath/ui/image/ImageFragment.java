@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingComponent;
@@ -26,6 +27,8 @@ public class ImageFragment  extends Fragment implements Injectable {
     DataBindingComponent dataBindingComponent = new FragmentDataBindingComponent(this);
     ImageFragmentBinding binding;
 
+    private ProgressBar progressBar;
+
     @Inject
     ViewModelProvider.Factory viewModelFactory;
 
@@ -44,7 +47,12 @@ public class ImageFragment  extends Fragment implements Injectable {
                 .inflate(inflater, R.layout.image_fragment, container, false,
                         dataBindingComponent);
 
-        return  binding.getRoot();
+        View rootView = binding.getRoot();
+
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
+
+        return  rootView;
     }
 
     @Override
@@ -55,7 +63,9 @@ public class ImageFragment  extends Fragment implements Injectable {
                 .of(requireActivity(), viewModelFactory)
                 .get(ImageViewModel.class);
 
-        imageViewModel.getSelected()
-                .observe(getViewLifecycleOwner(), image -> binding.setImage(image));
+        imageViewModel.getSelected().observe(getViewLifecycleOwner(), image -> {
+            progressBar.setVisibility(View.GONE);
+            binding.setImage(image);
+        });
     }
 }

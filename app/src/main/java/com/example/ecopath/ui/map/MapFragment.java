@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -42,6 +43,7 @@ public class MapFragment extends Fragment implements Injectable, OnMapReadyCallb
 
     Activity activity;
     private Toolbar appToolbar;
+    private ProgressBar progressBar;
 
     @Inject
     ViewModelProvider.Factory viewModelFactory;
@@ -67,6 +69,9 @@ public class MapFragment extends Fragment implements Injectable, OnMapReadyCallb
         appToolbar.setSubtitle(R.string.main_toolbar_subtitle);
 
         setUpToolbar();
+
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.VISIBLE);
 
         return rootView;
     }
@@ -104,6 +109,7 @@ public class MapFragment extends Fragment implements Injectable, OnMapReadyCallb
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        progressBar.setVisibility(View.GONE);
         mMap = googleMap;
 
         mapPointViewModel.getAllMapPoints().observe(this, mapPoints -> {
