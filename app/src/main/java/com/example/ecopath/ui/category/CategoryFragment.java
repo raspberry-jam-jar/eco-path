@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,7 @@ import com.example.ecopath.R;
 import com.example.ecopath.binding.FragmentDataBindingComponent;
 import com.example.ecopath.databinding.CategoryFragmentBinding;
 import com.example.ecopath.di.Injectable;
+import com.example.ecopath.ui.common.DetectConnection;
 import com.example.ecopath.ui.image.ImageClickCallback;
 import com.example.ecopath.ui.image.ImageFragment;
 import com.example.ecopath.ui.image.ImageViewModel;
@@ -118,6 +120,10 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if (!DetectConnection.checkInternetConnection(requireActivity())) {
+            Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
+        }
 
         categoryViewModel = ViewModelProviders
                 .of(requireActivity(), viewModelFactory)
