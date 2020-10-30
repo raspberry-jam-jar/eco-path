@@ -13,6 +13,7 @@
             android:id="@+id/imageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginVertical="2dp"
             android:contentDescription="@string/category_image_description"
             android:scaleType="centerCrop"
             app:imageUrl="@{image.imageSmallUrl}"
