@@ -47,6 +47,7 @@ public class CategoryRepository {
             protected void saveCallResult(@NonNull List<CategoryWithImages> categories) {
 //                db.beginTransaction();
                 try {
+                    categoryDao.delete(mapPointId);
                     for (CategoryWithImages categoryWithImages : categories) {
                         categoryDao.insert(categoryWithImages.category);
                     }
