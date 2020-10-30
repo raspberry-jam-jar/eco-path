@@ -2,7 +2,6 @@ package com.example.ecopath.db;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -20,8 +19,8 @@ public interface CategoryDao {
     @Update
     public void update(Category... categories);
 
-    @Delete
-    public void delete(Category... categories);
+    @Query("DELETE from Category WHERE pointId=:mapPointId")
+    public void delete(Integer mapPointId);
 
     @Query("SELECT * from Category WHERE pointId=:mapPointId")
     public List<Category> findForMapPoint(Integer mapPointId);
