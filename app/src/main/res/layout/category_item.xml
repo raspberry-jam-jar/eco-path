@@ -9,7 +9,7 @@
     </data>
     <androidx.cardview.widget.CardView
         android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_height="180dp"
         card_view:cardCornerRadius="10dp"
         android:layout_marginBottom="@dimen/default_margin"
         android:layout_marginEnd="@dimen/default_margin"
@@ -18,22 +18,20 @@
         android:onClick="@{() ->  categoryClickCallback.onClick(categoryWithImages)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="150dp"
-                android:layout_height="180dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/category_image_description"
                 android:scaleType="centerCrop"
                 app:imageUrl="@{categoryWithImages.category.imageSmallUrl}"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintHorizontal_bias="0.0"
                 card_view:layout_constraintStart_toStartOf="parent"
-                card_view:layout_constraintTop_toTopOf="parent"
-                card_view:layout_constraintVertical_bias="1.0" />
+                card_view:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -42,15 +40,9 @@
                 android:textColor="#FFFFFF"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:layout_marginStart="@dimen/default_margin"
-                android:layout_marginEnd="@dimen/default_margin"
-                android:layout_marginBottom="@dimen/default_margin"
-                card_view:layout_constraintBottom_toBottomOf="@+id/imageView"
-                card_view:layout_constraintEnd_toEndOf="@+id/imageView"
-                card_view:layout_constraintHorizontal_bias="0.173"
-                card_view:layout_constraintStart_toStartOf="@+id/imageView"
-                card_view:layout_constraintTop_toTopOf="parent"
-                card_view:layout_constraintVertical_bias="0.9" />
+                android:layout_margin="@dimen/default_margin"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
