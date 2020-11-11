@@ -50,6 +50,16 @@ public class CategoriesListAdapter extends
         else return 0;
     }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     public void setCategoriesList(List<CategoryWithImages> categoriesList) {
         this.categoryWithImagesList = categoriesList;
         notifyDataSetChanged();
