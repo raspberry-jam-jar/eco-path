@@ -15,6 +15,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Path;
 import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 
 /**
  * REST API access points
@@ -33,9 +34,9 @@ public interface EcoPathDataService {
     @GET(BuildConfig.API_VERSION + "points/{mapPointId}/positions")
     Call<List<CategoryWithImages>> getCategories(@Path("mapPointId") Integer mapPointId);
 
-    @GET("attaches/images/{fileUrl}")
+    @GET()
     @Streaming
-    Call<ResponseBody> downloadImage(@Path("fileUrl") String fileUrl);
+    Call<ResponseBody> downloadImage(@Url() String fileUrl);
 
     @Headers({BuildConfig.AUTH_HEADER})
     @GET(BuildConfig.API_VERSION + "positions/{categoryId}/images")

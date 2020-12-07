@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.ecopath.repository.CategoryRepository;
 import com.example.ecopath.util.AbsentLiveData;
+import com.example.ecopath.vo.Category;
 import com.example.ecopath.vo.CategoryWithImages;
 import com.example.ecopath.vo.Resource;
 
@@ -16,12 +17,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class CategoryViewModel extends ViewModel {
+    CategoryRepository categoryRepository;
     private final MutableLiveData<String> mapPointId = new MutableLiveData<>();
     private LiveData<Resource<List<CategoryWithImages>>> allCategories;
     private final MutableLiveData<CategoryWithImages> selectedCategory = new MutableLiveData<>();
 
     @Inject
     CategoryViewModel(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
         allCategories = Transformations.switchMap(mapPointId, mapPointId -> {
             if (mapPointId == null || mapPointId.trim().length() == 0) {
                 return AbsentLiveData.create();
@@ -40,4 +43,8 @@ public class CategoryViewModel extends ViewModel {
     public void select(CategoryWithImages category) { selectedCategory.setValue(category); }
 
     public  LiveData<CategoryWithImages> getSelected() { return selectedCategory; }
+
+    public LiveData<List<CategoryWithImages>> loadFromDb() {
+        return this.categoryRepository.loadFromDb(Integer.valueOf(this.mapPointId.getValue()));
+    }
 }

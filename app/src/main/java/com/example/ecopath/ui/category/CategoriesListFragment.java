@@ -106,14 +106,21 @@ public class CategoriesListFragment extends Fragment implements Injectable {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (!DetectConnection.checkInternetConnection(requireActivity())) {
-            Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
-        }
-
         categoryViewModel = ViewModelProviders
                 .of(requireActivity(), viewModelFactory)
                 .get(CategoryViewModel.class);
         categoryViewModel.setMapPointId(getArguments().getString("map_point_id"));
+
+        if (!DetectConnection.checkInternetConnection(requireActivity())) {
+            categoryViewModel.loadFromDb().observe(getViewLifecycleOwner(), categories -> {
+                if (categories !=null && !categories.isEmpty()) {
+                    adapter.setCategoriesList(categories);
+                } else {
+                    Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
         categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), resource -> {
             if (!resource.status.name().equals("LOADING")) {
                 progressBar.setVisibility(View.GONE);

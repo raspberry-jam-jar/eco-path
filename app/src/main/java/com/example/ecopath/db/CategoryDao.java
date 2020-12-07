@@ -8,6 +8,7 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.ecopath.vo.Category;
+import com.example.ecopath.vo.MapPoint;
 
 import java.util.List;
 
@@ -24,4 +25,10 @@ public interface CategoryDao {
 
     @Query("SELECT * from Category WHERE pointId=:mapPointId")
     public List<Category> findForMapPoint(Integer mapPointId);
+
+    @Query("SELECT * from Category WHERE id=:id")
+    Category findById(Integer id);
+
+    @Update
+    void update(Category category);
 }
