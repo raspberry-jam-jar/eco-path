@@ -14,6 +14,7 @@ import androidx.databinding.BindingAdapter;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.ecopath.BuildConfig;
@@ -48,7 +49,7 @@ public class FragmentBindingAdapters {
         File imgFile = new File(instance.getPath());
 
         if (imgFile.exists()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            Bitmap myBitmap = BitmapFactory.decodeFile(instance.getPath());
             imageView.setImageBitmap(myBitmap);
 
         } else if (instance.getImageSmallUrl() != null) {

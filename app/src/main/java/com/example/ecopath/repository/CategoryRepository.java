@@ -13,9 +13,11 @@ import com.example.ecopath.db.CategoryWithImagesDao;
 import com.example.ecopath.db.EcoPathDB;
 import com.example.ecopath.db.ImageDao;
 import com.example.ecopath.util.AbsentLiveData;
+import com.example.ecopath.vo.Category;
 import com.example.ecopath.vo.CategoryWithImages;
 import com.example.ecopath.vo.Resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -42,23 +44,46 @@ public class CategoryRepository {
         this.ecoPathDataService = ecoPathDataService;
     }
 
+    public LiveData<List<CategoryWithImages>> loadFromDb(Integer mapPointId) {
+        return Transformations.switchMap(
+            categoryWithImagesDao.getAll(mapPointId), categories -> {
+                if (categories == null || categories.isEmpty()) {
+                    return AbsentLiveData.create();
+                } else {
+                    return categoryWithImagesDao.getAll(mapPointId);
+                }
+            });
+    }
+
     public LiveData<Resource<List<CategoryWithImages>>> getAllCategories(Integer mapPointId) {
         return new NetworkBoundResource<List<CategoryWithImages>, List<CategoryWithImages>>(appExecutors) {
 
             @Override
             protected void saveCallResult(@NonNull List<CategoryWithImages> categories) {
-//                db.beginTransaction();
+                db.beginTransaction();
                 try {
-                    categoryDao.delete(mapPointId);
+                    List<Integer> actualIds = new ArrayList<>();
+
                     for (CategoryWithImages categoryWithImages : categories) {
-                        imageDao.delete(categoryWithImages.category.getId());
-                        categoryDao.insert(categoryWithImages.category);
+                        Category remoteServerCategory = categoryWithImages.category;
+                        Integer remoteServerCategoryId = remoteServerCategory.getId();
+                        actualIds.add(remoteServerCategoryId);
+
+                        Category savedInDbCategory = categoryDao.findById(remoteServerCategoryId);
+                        if (savedInDbCategory == null) {
+                            categoryDao.insert(categoryWithImages.category);
+                        } else {
+                            remoteServerCategory.setImagePath(savedInDbCategory.getImagePath());
+                            categoryDao.update(remoteServerCategory);
+//                            imageDao.delete(categoryWithImages.category.getId());
+                        }
                     }
+                    db.setTransactionSuccessful();
                 }
                 catch (Exception e){
                     System.out.println(e);
                 } finally {
-//                    db.endTransaction();
+                    db.endTransaction();
                 }
             }
 
@@ -68,14 +93,7 @@ public class CategoryRepository {
             @NonNull
             @Override
             protected LiveData<List<CategoryWithImages>> loadFromDb() {
-                return Transformations.switchMap(
-                        categoryWithImagesDao.getAll(mapPointId), categories -> {
-                    if (categories == null || categories.isEmpty()) {
-                        return AbsentLiveData.create();
-                    } else {
-                        return categoryWithImagesDao.getAll(mapPointId);
-                    }
-                });
+                return loadFromDb();
             }
 
             @NonNull

@@ -30,6 +30,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -100,8 +102,8 @@ public class DownloadWorker extends Worker {
         File outputFile = new File(context.getFilesDir(), fileName);
         OutputStream outputStream = new FileOutputStream(outputFile);
         long total = 0;
-        boolean downloadComplete = false;
-        //int totalFileSize = (int) (fileSize / (Math.pow(1024, 2)));
+//        boolean downloadComplete = false;
+//        int totalFileSize = (int) (fileSize / (Math.pow(1024, 2)));
 
         while ((count = inputStream.read(data)) != -1) {
 
@@ -111,7 +113,7 @@ public class DownloadWorker extends Worker {
 
 //            updateNotification(progress);
             outputStream.write(data, 0, count);
-            downloadComplete = true;
+//            downloadComplete = true;
         }
 //        onDownloadComplete(downloadComplete);
         outputStream.flush();
@@ -121,112 +123,80 @@ public class DownloadWorker extends Worker {
         return outputFile.getAbsolutePath();
     }
 
-
-//        String downloadImage(String imageUrl, String fileName, Context context) {
-//        File imageFile = new File(context.getFilesDir(), fileName);
-//
-//        Glide.with(context)
-//            .load(BuildConfig.SERVER_URL + imageUrl)
-//            .into(new CustomTarget<Drawable>() {
-//                @Override
-//                public void onResourceReady(@NonNull Drawable resource,
-//                                            @Nullable Transition<? super Drawable> transition) {
-//                    Bitmap imageBitmap = ((BitmapDrawable) resource).getBitmap();
-////                    File imageFile = new File(context.getFilesDir(), fileName);
-//
-//                    try {
-//                        FileOutputStream outputStream = new FileOutputStream(imageFile);
-//                        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-//                        outputStream.close();
-//                    } catch (FileNotFoundException e) {
-//                        System.out.println("Error to save file: path not found");
-//                        e.printStackTrace();
-//
-//                    } catch (IOException e) {
-//                        System.out.println("Error to save file");
-//                        e.printStackTrace();
-//                    }
-//                }
-//                @Override
-//                public void onLoadCleared(@Nullable Drawable placeholder) {
-//                    // Remove the Drawable provided in onResourceReady from any Views and ensure
-//                    // no references to it remain.
-//                }
-//
-//                @Override
-//                public void onLoadFailed(@Nullable Drawable errorDrawable) {
-//                    super.onLoadFailed(errorDrawable);
-//                }
-//            });
-//        return imageFile.getAbsolutePath();
-//    }
-
+    @NotNull
     @Override
     public Result doWork() {
 //        try {
-            Context context = getApplicationContext();
-            String imageUrl = getInputData().getString("imageUrl");
-            Integer mapPointId = getInputData().getInt("id", 0);
+        Context context = getApplicationContext();
+        String imageUrl = getInputData().getString("imageUrl");
+        Integer mapPointId = getInputData().getInt("id", 0);
 
-            if (imageUrl == null) {
-                return Result.success();
-            }
+        EcoPathDataService service = getEcoPathDataService();
+        EcoPathDB db = getEcoPathDb(context);
 
-            EcoPathDataService service = getEcoPathDataService();
-            Call<ResponseBody> request = service.downloadImage(imageUrl.replaceFirst("/attaches/images/", ""));
+        if (imageUrl != null) {
+            // TODO improve regex on case if prefix will be changed
+            Call<ResponseBody> mainImageRequest = service.downloadImage(
+                    imageUrl
+            );
 
             String imagePath;
             try {
-                imagePath = saveImage(Objects.requireNonNull(request.execute().body()), context,
-                        "test_" + mapPointId + ".jpeg");
-                EcoPathDB db = getEcoPathDb(context);
+                imagePath = saveImage(
+                        Objects.requireNonNull(mainImageRequest.execute().body()),
+                        context,
+                        "test_" + mapPointId + ".jpeg"
+                );
 
                 MapPoint mapPoint = db.mapPointDao().findById(mapPointId);
                 mapPoint.setImagePath(imagePath);
                 db.mapPointDao().updateAll(mapPoint);
-                return Result.success();
+
             } catch (IOException e) {
                 e.printStackTrace();
                 Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                 return Result.failure();
             }
+        }
 
-            //                        Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+//          Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
 
+        Call<List<CategoryWithImages>> categoriesRequest = service.getCategories(mapPointId);
+        try {
+            Response<List<CategoryWithImages>> response = categoriesRequest.execute();
+            if (response.isSuccessful()) {
+                db.beginTransaction();
+                try {
+                    db.categoryDao().delete(mapPointId);
+                    for (CategoryWithImages categoryWithImages : response.body()) {
+                        db.categoryDao().insert(categoryWithImages.category);
+                        db.imageDao().delete(categoryWithImages.category.getId());
+                    }
+                    db.setTransactionSuccessful();
+                } catch (Exception e) {
+                    System.out.println(e);
+                } finally {
+                    db.endTransaction();
+                }
 
+                for (CategoryWithImages categoryWithImages : response.body()) {
+                    Call<ResponseBody> categoryImageRequest = service.downloadImage(
+                            categoryWithImages.category.getImageSmallUrl()
+                    );
 
-//            EcoPathDataService service = getEcoPathDataService();
-//            Call<List<CategoryWithImages>> categoriesCall = service.getCategories(mapPointId);
-//
-//            categoriesCall.enqueue(new Callback<List<CategoryWithImages>>() {
-//                @Override
-//                public void onResponse(Call<List<CategoryWithImages>> call, Response<List<CategoryWithImages>> response) {
-//                    if (response.isSuccessful()) {
-//                        db.beginTransaction();
-//                        try {
-//                            db.categoryDao().delete(mapPointId);
-//                            for (CategoryWithImages categoryWithImages : response.body()) {
-//                                db.categoryDao().insert(categoryWithImages.category);
-//                                db.imageDao().delete(categoryWithImages.category.getId());
-//                                db.setTransactionSuccessful();
-//                            }
-//                        } catch (Exception e) {
-//                            System.out.println(e);
-//                        } finally {
-//                            db.endTransaction();
-//                        }
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<List<CategoryWithImages>> call, Throwable t) {
-//
-//                }
-//            });
-//        } catch (Exception e) {
-//            return Result.failure();
-//        }
-//
-//        return Result.success();
+                    String categoryImagePath = saveImage(
+                            Objects.requireNonNull(categoryImageRequest.execute().body()),
+                            context,
+                            "category_small" + categoryWithImages.category.getId() + ".jpeg"
+                    );
+                    categoryWithImages.category.setImagePath(categoryImagePath);
+                    db.categoryDao().update(categoryWithImages.category);
+                }
+            }
+            return Result.success();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Result.failure();
+        }
     }
 }

@@ -5,8 +5,10 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.example.ecopath.binding.BaseModel;
+
 @Entity()
-public class Category {
+public class Category implements BaseModel {
     @NonNull
     @PrimaryKey
     @ColumnInfo(name = "id")
@@ -18,6 +20,7 @@ public class Category {
 
     private String imageSmallUrl;
     private String imageBigUrl;
+    private String imagePath;
     // TODO create index
     @NonNull
     private Integer pointId;
@@ -40,6 +43,15 @@ public class Category {
     public String getPreview() { return preview; }
     public String getDescription() { return description; }
     public Integer getPointId() { return pointId; }
+    public String getImagePath() { return imagePath; }
+    @Override
+    public String getPath() {
+        if (imagePath == null){
+            return "";
+        }
+        return imagePath;
+    }
+
     public String getImageSmallUrl() { return imageSmallUrl; }
     public String getImageBigUrl() { return imageBigUrl; }
     public String getAudioUrl() { return audioUrl; }
@@ -51,6 +63,7 @@ public class Category {
     public void setImageBigUrl(String imageBigUrl) {
         this.imageBigUrl = imageBigUrl;
     }
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
     public void setAudioUrl(String audioUrl) { this.audioUrl = audioUrl; }
 
     public Boolean hasAudioUrl() { return this.audioUrl != null; }

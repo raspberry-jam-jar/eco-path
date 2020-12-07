@@ -130,6 +130,7 @@ public class MapPointDownloadsFragment extends Fragment implements Injectable {
                 } else if (workInfo.getState() == SUCCEEDED) {
                     mapPoint.setIsLoaded(true);
                     mapPointViewModel.updateIsLoaded(mapPoint);
+                    Toast.makeText(getContext(), "Succeed!", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Fail!", Toast.LENGTH_SHORT).show();
                 }

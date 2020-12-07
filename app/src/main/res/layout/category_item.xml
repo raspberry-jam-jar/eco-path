@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/category_image_description"
                 android:scaleType="centerCrop"
-                app:imageUrl="@{categoryWithImages.category.imageSmallUrl}"
+                app:imageSrc="@{categoryWithImages.category}"
                 card_view:layout_constraintBottom_toBottomOf="parent"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintStart_toStartOf="parent"
