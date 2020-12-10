@@ -91,7 +91,7 @@ public class DownloadWorker extends Worker {
         return Room.databaseBuilder(context, EcoPathDB.class,"ecoPath.db").build();
     }
 
-    private String saveImage(ResponseBody body, Context context, String fileName) throws IOException {
+    private String saveImage(ResponseBody body, File directory, String fileName) throws IOException {
 
         int count;
         byte data[] = new byte[1024 * 4];
@@ -99,7 +99,7 @@ public class DownloadWorker extends Worker {
         InputStream inputStream = new BufferedInputStream(body.byteStream(), 1024 * 8);
 //        File outputFile = new File(Environment.getExternalStoragePublicDirectory(
 //        Environment.DIRECTORY_DOWNLOADS), "journaldev-image-downloaded.jpg");
-        File outputFile = new File(context.getFilesDir(), fileName);
+        File outputFile = new File(directory, fileName);
         OutputStream outputStream = new FileOutputStream(outputFile);
         long total = 0;
 //        boolean downloadComplete = false;
@@ -123,6 +123,14 @@ public class DownloadWorker extends Worker {
         return outputFile.getAbsolutePath();
     }
 
+    private File getOrCreateDir(Context context, String dirName) {
+        File directory = new File(context.getFilesDir() + "/" +dirName);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        return directory;
+    }
+
     @NotNull
     @Override
     public Result doWork() {
@@ -134,18 +142,17 @@ public class DownloadWorker extends Worker {
         EcoPathDataService service = getEcoPathDataService();
         EcoPathDB db = getEcoPathDb(context);
 
+        File directory = getOrCreateDir(context, mapPointId.toString());
+
         if (imageUrl != null) {
-            // TODO improve regex on case if prefix will be changed
-            Call<ResponseBody> mainImageRequest = service.downloadImage(
-                    imageUrl
-            );
+            Call<ResponseBody> mainImageRequest = service.downloadImage(imageUrl);
 
             String imagePath;
             try {
                 imagePath = saveImage(
                         Objects.requireNonNull(mainImageRequest.execute().body()),
-                        context,
-                        "test_" + mapPointId + ".jpeg"
+                        directory,
+                        "mainImage.jpeg"
                 );
 
                 MapPoint mapPoint = db.mapPointDao().findById(mapPointId);
@@ -186,8 +193,8 @@ public class DownloadWorker extends Worker {
 
                     String categoryImagePath = saveImage(
                             Objects.requireNonNull(categoryImageRequest.execute().body()),
-                            context,
-                            "category_small" + categoryWithImages.category.getId() + ".jpeg"
+                            directory,
+                            "categorySmallImage" + categoryWithImages.category.getId() + ".jpeg"
                     );
                     categoryWithImages.category.setImagePath(categoryImagePath);
                     db.categoryDao().update(categoryWithImages.category);
@@ -196,7 +203,7 @@ public class DownloadWorker extends Worker {
             return Result.success();
         } catch (IOException e) {
             e.printStackTrace();
-            return Result.failure();
+            return Result.failure(getInputData());
         }
     }
 }

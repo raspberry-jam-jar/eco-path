@@ -93,7 +93,14 @@ public class CategoryRepository {
             @NonNull
             @Override
             protected LiveData<List<CategoryWithImages>> loadFromDb() {
-                return loadFromDb();
+                return Transformations.switchMap(
+                    categoryWithImagesDao.getAll(mapPointId), categories -> {
+                        if (categories == null || categories.isEmpty()) {
+                            return AbsentLiveData.create();
+                        } else {
+                            return categoryWithImagesDao.getAll(mapPointId);
+                        }
+                    });
             }
 
             @NonNull

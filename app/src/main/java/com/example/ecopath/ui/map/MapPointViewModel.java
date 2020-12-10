@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkContinuation;
 import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
+import com.example.ecopath.workers.DeleteWorker;
 import com.example.ecopath.workers.DownloadWorker;
 import com.example.ecopath.vo.MapPoint;
 import com.example.ecopath.repository.MapPointRepository;
@@ -57,11 +59,34 @@ public class MapPointViewModel extends ViewModel {
 
         Data mapPointData = builder.build();
 
-        WorkRequest downloadWorkRequest =
+        OneTimeWorkRequest downloadWorkRequest =
                 new OneTimeWorkRequest.Builder(DownloadWorker.class)
                         .setInputData(mapPointData)
                         .build();
-        workManager.enqueue(downloadWorkRequest);
+
+//        OneTimeWorkRequest cleanUpWorkRequest =
+//                new OneTimeWorkRequest.Builder(DeleteWorker.class).build();
+
+        WorkContinuation continuation = workManager.beginWith(downloadWorkRequest);
+//        continuation = continuation.then(cleanUpWorkRequest);
+        continuation.enqueue();
+
         return downloadWorkRequest.getId();
+    }
+
+    public UUID deleteMapPoint(MapPoint mapPoint) {
+        Data.Builder builder = new Data.Builder();
+        builder.putInt("id", mapPoint.getId());
+
+        Data mapPointData = builder.build();
+
+        OneTimeWorkRequest deleteWorkRequest =
+                new OneTimeWorkRequest.Builder(DeleteWorker.class)
+                        .setInputData(mapPointData)
+                        .build();
+
+        workManager.enqueue(deleteWorkRequest);
+
+        return deleteWorkRequest.getId();
     }
 }
