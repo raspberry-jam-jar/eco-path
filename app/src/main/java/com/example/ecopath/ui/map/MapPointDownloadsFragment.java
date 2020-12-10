@@ -122,23 +122,38 @@ public class MapPointDownloadsFragment extends Fragment implements Injectable {
     private final DownloadCallback downloadCallback = new DownloadCallback() {
         @Override
         public void onClick(MapPoint mapPoint) {
-            UUID workerId = mapPointViewModel.downloadMapPoint(mapPoint);
+            if (mapPoint.getIsLoaded()) {
+                UUID workerId = mapPointViewModel.deleteMapPoint(mapPoint);
 
-            mapPointViewModel.getOutputWorkInfo(workerId).observe(getViewLifecycleOwner(), workInfo -> {
-                if (!workInfo.getState().isFinished()) {
-                    System.out.println("loading");
-                } else if (workInfo.getState() == SUCCEEDED) {
-                    mapPoint.setIsLoaded(true);
-                    mapPointViewModel.updateIsLoaded(mapPoint);
-                    Toast.makeText(getContext(), "Succeed!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Fail!", Toast.LENGTH_SHORT).show();
-                }
-            });
-            // TODO check permissions
+                mapPointViewModel.getOutputWorkInfo(workerId).observe(getViewLifecycleOwner(), workInfo -> {
+                    if (!workInfo.getState().isFinished()) {
+                        System.out.println("deleting");
+                    } else if (workInfo.getState() == SUCCEEDED) {
+                        mapPoint.setIsLoaded(false);
+                        mapPointViewModel.updateIsLoaded(mapPoint);
+                        Toast.makeText(getContext(), "Succeed!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Fail!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
 
-//            mapPoint.setIsLoaded(!mapPoint.getIsLoaded());
-//            mapPointViewModel.update(mapPoint);
+                UUID workerId = mapPointViewModel.downloadMapPoint(mapPoint);
+
+                mapPointViewModel.getOutputWorkInfo(workerId).observe(getViewLifecycleOwner(), workInfo -> {
+                    if (!workInfo.getState().isFinished()) {
+                        System.out.println("loading");
+                    } else if (workInfo.getState() == SUCCEEDED) {
+                        mapPoint.setIsLoaded(true);
+                        mapPointViewModel.updateIsLoaded(mapPoint);
+                        Toast.makeText(getContext(), "Succeed!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Fail!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                // TODO check permissions
+            }
+
         }
     };
 }

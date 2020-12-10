@@ -116,21 +116,23 @@ public class CategoriesListFragment extends Fragment implements Injectable {
                 if (categories !=null && !categories.isEmpty()) {
                     adapter.setCategoriesList(categories);
                 } else {
-                    Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(
+                        getContext(), R.string.no_connection, Toast.LENGTH_SHORT
+                    ).show();
+                }
+                progressBar.setVisibility(View.GONE);
+            });
+        } else {
+            categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), resource -> {
+                if (!resource.status.name().equals("LOADING")) {
+                    progressBar.setVisibility(View.GONE);
+                    adapter.setCategoriesList(resource.data);
+                } else if (resource.status.name().equals("ERROR")) {
+                    Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                 }
             });
         }
-
-        categoryViewModel.getAllCategories().observe(getViewLifecycleOwner(), resource -> {
-            if (!resource.status.name().equals("LOADING")) {
-                progressBar.setVisibility(View.GONE);
-                adapter.setCategoriesList(resource.data);
-            } else if (resource.status.name().equals("ERROR")) {
-                Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-            }
-        });
-
     }
 
     private final CategoryClickCallback categoryClickCallback = new CategoryClickCallback() {
