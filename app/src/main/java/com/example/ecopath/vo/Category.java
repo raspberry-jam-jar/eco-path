@@ -26,6 +26,7 @@ public class Category implements BaseModel {
     private Integer pointId;
 
     private String audioUrl;
+    private String audioPath;
 
     public Category(@NonNull Integer id, @NonNull String name, @NonNull Integer pointId,
                     String preview, String description) {
@@ -55,6 +56,7 @@ public class Category implements BaseModel {
     public String getImageSmallUrl() { return imageSmallUrl; }
     public String getImageBigUrl() { return imageBigUrl; }
     public String getAudioUrl() { return audioUrl; }
+    public String getAudioPath() { return audioPath; }
 
     public void setImageSmallUrl(String imageSmallUrl) {
         this.imageSmallUrl = imageSmallUrl;
@@ -65,6 +67,7 @@ public class Category implements BaseModel {
     }
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
     public void setAudioUrl(String audioUrl) { this.audioUrl = audioUrl; }
+    public void setAudioPath(String audioPath) { this.audioPath = audioPath; }
 
     public Boolean hasAudioUrl() { return this.audioUrl != null; }
 }
