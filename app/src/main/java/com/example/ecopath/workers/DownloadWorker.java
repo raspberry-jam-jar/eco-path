@@ -91,7 +91,7 @@ public class DownloadWorker extends Worker {
         return Room.databaseBuilder(context, EcoPathDB.class,"ecoPath.db").build();
     }
 
-    private String saveImage(ResponseBody body, File directory, String fileName) throws IOException {
+    private String saveFile(ResponseBody body, File directory, String fileName) throws IOException {
 
         int count;
         byte data[] = new byte[1024 * 4];
@@ -149,7 +149,7 @@ public class DownloadWorker extends Worker {
 
             String imagePath;
             try {
-                imagePath = saveImage(
+                imagePath = saveFile(
                         Objects.requireNonNull(mainImageRequest.execute().body()),
                         directory,
                         "mainImage.jpeg"
@@ -191,12 +191,25 @@ public class DownloadWorker extends Worker {
                             categoryWithImages.category.getImageSmallUrl()
                     );
 
-                    String categoryImagePath = saveImage(
+                    String categoryImagePath = saveFile(
                             Objects.requireNonNull(categoryImageRequest.execute().body()),
                             directory,
                             "categorySmallImage" + categoryWithImages.category.getId() + ".jpeg"
                     );
                     categoryWithImages.category.setImagePath(categoryImagePath);
+
+                    if (categoryWithImages.category.getAudioUrl() != null) {
+                        Call<ResponseBody> categoryAudioRequest = service.downloadImage(
+                                categoryWithImages.category.getAudioUrl()
+                        );
+                        String categoryAudioPath = saveFile(
+                                Objects.requireNonNull(categoryAudioRequest.execute().body()),
+                                directory,
+                                "categoryAudio" + categoryWithImages.category.getId() + ".jpeg"
+                        );
+                        categoryWithImages.category.setAudioPath(categoryAudioPath);
+                    }
+
                     db.categoryDao().update(categoryWithImages.category);
                 }
             }

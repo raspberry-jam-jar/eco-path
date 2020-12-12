@@ -74,6 +74,7 @@ public class CategoryRepository {
                             categoryDao.insert(categoryWithImages.category);
                         } else {
                             remoteServerCategory.setImagePath(savedInDbCategory.getImagePath());
+                            remoteServerCategory.setAudioPath(savedInDbCategory.getAudioPath());
                             categoryDao.update(remoteServerCategory);
 //                            imageDao.delete(categoryWithImages.category.getId());
                         }

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -126,10 +127,6 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if (!DetectConnection.checkInternetConnection(requireActivity())) {
-            Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
-        }
-
         categoryViewModel = ViewModelProviders
                 .of(requireActivity(), viewModelFactory)
                 .get(CategoryViewModel.class);
@@ -143,18 +140,24 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
             binding.setCategoryWithImages(category);
             binding.setMainCategoryName(getArguments().getString("main_category_name"));
 
-            Integer categoryId = category.category.getId();
-            imageViewModel.setCategoryId(String.valueOf(categoryId));
-            imageViewModel.getAllImages().observe(getViewLifecycleOwner(), resource -> {
-                if (!resource.status.name().equals("LOADING")) {
-                    progressBar.setVisibility(View.GONE);
-                    adapter.setImagesList(resource.data);
-                } else if (resource.status.name().equals("ERROR")) {
-                    Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
+            if (!DetectConnection.checkInternetConnection(requireActivity())) {
+                progressBar.setVisibility(View.GONE);
+                if (category.category.getAudioPath() != null) {
+                    Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
                 }
-            });
-
+            } else {
+                Integer categoryId = category.category.getId();
+                imageViewModel.setCategoryId(String.valueOf(categoryId));
+                imageViewModel.getAllImages().observe(getViewLifecycleOwner(), resource -> {
+                    if (!resource.status.name().equals("LOADING")) {
+                        progressBar.setVisibility(View.GONE);
+                        adapter.setImagesList(resource.data);
+                    } else if (resource.status.name().equals("ERROR")) {
+                        Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+            }
         });
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -238,8 +241,27 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
                                 .build()
                 );
 
-                mediaPlayer.setDataSource(BuildConfig.SERVER_URL +
-                        binding.getCategoryWithImages().category.getAudioUrl());
+                if (!DetectConnection.checkInternetConnection(requireActivity())) {
+                    if (binding.getCategoryWithImages().category.getAudioPath() == null) {
+                        Toast.makeText(
+                                getContext(), R.string.no_connection, Toast.LENGTH_SHORT
+                        ).show();
+                        clearMediaPlayer();
+                        wasPlaying = true;
+                        fab.setImageDrawable(
+                            ContextCompat
+                                .getDrawable(getContext(), android.R.drawable.ic_media_play)
+                        );
+                    } else {
+                        mediaPlayer.setDataSource(
+                                getContext(),
+                                Uri.parse(binding.getCategoryWithImages().category.getAudioPath())
+                        );
+                    }
+                } else {
+                    mediaPlayer.setDataSource(BuildConfig.SERVER_URL +
+                            binding.getCategoryWithImages().category.getAudioUrl());
+                }
 
                 mediaPlayer.prepare();
                 mediaPlayer.setVolume(0.5f, 0.5f);
