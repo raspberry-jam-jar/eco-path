@@ -23,4 +23,13 @@ public interface ImageDao {
 
     @Query("SELECT * from Image WHERE categoryId=:categoryId")
     public LiveData<List<Image>> getAll(Integer categoryId);
+
+    @Query("SELECT * from Image WHERE id=:id")
+    Image findById(Integer id);
+
+    @Query("DELETE from Image WHERE categoryId=:categoryId and id NOT IN (:actualIds)")
+    void deleteOutdated(Integer categoryId, List<Integer> actualIds);
+
+    @Query("DELETE from Image WHERE categoryId NOT IN (:actualCategoriesIds)")
+    void deleteForOutdatedCategories(List<Integer> actualCategoriesIds);
 }

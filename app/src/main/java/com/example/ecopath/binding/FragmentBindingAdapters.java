@@ -31,19 +31,6 @@ public class FragmentBindingAdapters {
     @Inject
     public FragmentBindingAdapters(Fragment fragment) { this.fragment = fragment; }
 
-    @BindingAdapter("imageUrl")
-    public void bindImage(ImageView imageView, String url) {
-        if (url != null){
-            Glide.with(fragment)
-                    .load(BuildConfig.SERVER_URL + url)
-                    .placeholder(new ColorDrawable(Color.LTGRAY))
-                    .into(imageView);
-        } else {
-            imageView.setBackgroundColor(Color.LTGRAY);
-            System.out.println("Empty url attribute");
-        }
-    }
-
     @BindingAdapter("imageSrc")
     public void bindLocalImage(ImageView imageView, BaseModel instance) {
         File imgFile = new File(instance.getPath());

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.ecopath.repository.ImageRepository;
 import com.example.ecopath.util.AbsentLiveData;
+import com.example.ecopath.vo.CategoryWithImages;
 import com.example.ecopath.vo.Image;
 import com.example.ecopath.vo.Resource;
 
@@ -19,9 +20,11 @@ public class ImageViewModel extends ViewModel {
     private LiveData<Resource<List<Image>>> allImages;
     private final MutableLiveData<String> categoryId = new MutableLiveData<>();
     private final MutableLiveData<Image> selectedImage = new MutableLiveData<>();
+    private final ImageRepository imageRepository;
 
     @Inject
     ImageViewModel(ImageRepository imageRepository) {
+        this.imageRepository = imageRepository;
         allImages = Transformations.switchMap(categoryId, categoryId -> {
             if (categoryId == null || categoryId.trim().length() == 0) {
                 return AbsentLiveData.create();
@@ -29,6 +32,10 @@ public class ImageViewModel extends ViewModel {
                 return imageRepository.getAllImages(Integer.valueOf(categoryId));
             }
         });
+    }
+
+    public LiveData<List<Image>> loadFromDb() {
+        return this.imageRepository.loadFromDb(Integer.valueOf(this.categoryId.getValue()));
     }
 
     public void setCategoryId(@NonNull String originalCategoryId) {

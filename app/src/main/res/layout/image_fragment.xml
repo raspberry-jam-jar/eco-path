@@ -18,6 +18,6 @@
             android:background="@color/cardview_dark_background"
             android:contentDescription="@string/category_image_description"
             android:scaleType="fitCenter"
-            app:imageUrl="@{image.imageBigUrl}" />
+            app:imageSrc="@{image}" />
     </LinearLayout>
 </layout>

@@ -47,8 +47,8 @@ public class ImagesListAdapter extends RecyclerView.Adapter<ImagesListAdapter.Im
         else return 0;
     }
 
-    public void setImagesList(List<Image> categoriesList) {
-        this.imagesList = categoriesList;
+    public void setImagesList(List<Image> imagesList) {
+        this.imagesList = imagesList;
         notifyDataSetChanged();
     }
     public void setCallback(@Nullable ImageClickCallback imageClickCallback) {
