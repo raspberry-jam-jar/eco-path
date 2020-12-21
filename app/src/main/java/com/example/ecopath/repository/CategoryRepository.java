@@ -76,9 +76,10 @@ public class CategoryRepository {
                             remoteServerCategory.setImagePath(savedInDbCategory.getImagePath());
                             remoteServerCategory.setAudioPath(savedInDbCategory.getAudioPath());
                             categoryDao.update(remoteServerCategory);
-//                            imageDao.delete(categoryWithImages.category.getId());
                         }
                     }
+                    categoryDao.deleteOutdated(mapPointId, actualIds);
+                    imageDao.deleteForOutdatedCategories(actualIds);
                     db.setTransactionSuccessful();
                 }
                 catch (Exception e){

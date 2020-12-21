@@ -23,6 +23,7 @@ import com.example.ecopath.api.ImagesListDeserializer;
 import com.example.ecopath.api.MapPointListSerializer;
 import com.example.ecopath.db.EcoPathDB;
 import com.example.ecopath.util.LiveDataCallAdapterFactory;
+import com.example.ecopath.vo.Category;
 import com.example.ecopath.vo.CategoryWithImages;
 import com.example.ecopath.vo.Image;
 import com.example.ecopath.vo.MapPoint;
@@ -187,30 +188,57 @@ public class DownloadWorker extends Worker {
                 }
 
                 for (CategoryWithImages categoryWithImages : response.body()) {
+                    Category category = categoryWithImages.category;
+                    Integer categoryId = category.getId();
+
                     Call<ResponseBody> categoryImageRequest = service.downloadImage(
-                            categoryWithImages.category.getImageSmallUrl()
+                            category.getImageSmallUrl()
                     );
 
                     String categoryImagePath = saveFile(
                             Objects.requireNonNull(categoryImageRequest.execute().body()),
                             directory,
-                            "categorySmallImage" + categoryWithImages.category.getId() + ".jpeg"
+                            "categorySmallImage" + categoryId + ".jpeg"
                     );
-                    categoryWithImages.category.setImagePath(categoryImagePath);
+                    category.setImagePath(categoryImagePath);
 
-                    if (categoryWithImages.category.getAudioUrl() != null) {
+                    if (category.getAudioUrl() != null) {
                         Call<ResponseBody> categoryAudioRequest = service.downloadImage(
-                                categoryWithImages.category.getAudioUrl()
+                                category.getAudioUrl()
                         );
                         String categoryAudioPath = saveFile(
                                 Objects.requireNonNull(categoryAudioRequest.execute().body()),
                                 directory,
-                                "categoryAudio" + categoryWithImages.category.getId() + ".jpeg"
+                                "categoryAudio" + categoryId + ".jpeg"
                         );
-                        categoryWithImages.category.setAudioPath(categoryAudioPath);
+                        category.setAudioPath(categoryAudioPath);
                     }
 
-                    db.categoryDao().update(categoryWithImages.category);
+                    db.categoryDao().update(category);
+                    Response<List<Image>> categoryImagesResponse = service
+                        .getCategoryImages(categoryId)
+                        .execute();
+                    if (categoryImagesResponse.isSuccessful()) {
+                        db.imageDao().delete(categoryId);
+
+                        for (Image image : categoryImagesResponse.body()) {
+                            image.setCategoryId(categoryId);
+                            Call<ResponseBody> categoryGalleryImageRequest = service.downloadImage(
+                                image.getImageBigUrl()
+                            );
+
+                            String categoryGalleryImagePath = saveFile(
+                                    Objects.requireNonNull(categoryGalleryImageRequest.execute().body()),
+                                    directory,
+                                    "categoryGalleryImage" +
+                                            categoryId +
+                                            "image" + image.getId() + ".jpeg"
+                            );
+
+                            image.setImagePath(categoryGalleryImagePath);
+                            db.imageDao().insertImage(image);
+                        }
+                    }
                 }
             }
             return Result.success();

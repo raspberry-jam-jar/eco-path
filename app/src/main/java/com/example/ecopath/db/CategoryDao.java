@@ -31,4 +31,7 @@ public interface CategoryDao {
 
     @Update
     void update(Category category);
+
+    @Query("DELETE from Category WHERE pointId=:mapPointId and id NOT IN (:actualIds)")
+    void deleteOutdated(Integer mapPointId, List<Integer> actualIds);
 }

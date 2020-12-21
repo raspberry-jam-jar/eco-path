@@ -41,4 +41,8 @@ public interface EcoPathDataService {
     @Headers({BuildConfig.AUTH_HEADER})
     @GET(BuildConfig.API_VERSION + "positions/{categoryId}/images")
     LiveData<ApiResponse<List<Image>>> listCategoryImages(@Path("categoryId") Integer categoryId);
+
+    @Headers({BuildConfig.AUTH_HEADER})
+    @GET(BuildConfig.API_VERSION + "positions/{categoryId}/images")
+    Call<List<Image>> getCategoryImages(@Path("categoryId") Integer categoryId);
 }

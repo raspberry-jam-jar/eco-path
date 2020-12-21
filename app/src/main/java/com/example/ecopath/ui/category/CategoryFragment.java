@@ -140,14 +140,24 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
             binding.setCategoryWithImages(category);
             binding.setMainCategoryName(getArguments().getString("main_category_name"));
 
+            Integer categoryId = category.category.getId();
+            imageViewModel.setCategoryId(String.valueOf(categoryId));
+
             if (!DetectConnection.checkInternetConnection(requireActivity())) {
                 progressBar.setVisibility(View.GONE);
-                if (category.category.getAudioPath() != null) {
-                    Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
-                }
+                imageViewModel.loadFromDb().observe(getViewLifecycleOwner(), images -> {
+                    adapter.setImagesList(images);
+
+                    Boolean categoryHasNotLoadedAudio =
+                            category.category.getAudioUrl() != null &&
+                                    category.category.getAudioPath() == null;
+                    Boolean categoryHasNotLoadedGalleryImages = images == null || images.isEmpty();
+
+                    if (categoryHasNotLoadedGalleryImages || categoryHasNotLoadedAudio) {
+                        Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
-                Integer categoryId = category.category.getId();
-                imageViewModel.setCategoryId(String.valueOf(categoryId));
                 imageViewModel.getAllImages().observe(getViewLifecycleOwner(), resource -> {
                     if (!resource.status.name().equals("LOADING")) {
                         progressBar.setVisibility(View.GONE);
