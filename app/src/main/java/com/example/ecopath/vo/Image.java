@@ -37,7 +37,7 @@ public class Image implements BaseModel {
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
     @Override
-    public String getPath() {
+    public String getPath(String imageSize) {
         if (imagePath == null){
             return "";
         }

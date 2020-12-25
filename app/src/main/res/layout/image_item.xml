@@ -17,6 +17,7 @@
             android:contentDescription="@string/category_image_description"
             android:scaleType="centerCrop"
             app:imageSrc="@{image}"
+            app:imageSize="@{`small`}"
             android:onClick="@{() ->  imageClickCallback.onClick(image)}" />
     </LinearLayout>
 </layout>
