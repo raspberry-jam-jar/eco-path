@@ -24,4 +24,11 @@
     <string name="delete_dialog_message">"Удалить категорию "</string>
     <string name="delete_ok">Удалить</string>
     <string name="cancel">Отмена</string>
+    <string name="welcome_dialog_title">Настроить данные для офлайн просмотра?</string>
+    <string name="welcome_dialog_message">
+        Мы рекомендуем загрузить данные заранее в связи с возможным отсутствием интернета
+        в районе Щелоковского хутора. Для настройки загруженного контента
+        перейдите в Меню - Загрузки.
+    </string>
+    <string name="welcome_ok">Настроить</string>
 </resources>
