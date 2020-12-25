@@ -27,6 +27,7 @@ import com.example.ecopath.vo.Category;
 import com.example.ecopath.vo.CategoryWithImages;
 import com.example.ecopath.vo.Image;
 import com.example.ecopath.vo.MapPoint;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -135,129 +136,156 @@ public class DownloadWorker extends Worker {
     @NotNull
     @Override
     public Result doWork() {
-//        try {
-        Context context = getApplicationContext();
-        String imageUrl = getInputData().getString("imageUrl");
-        Integer mapPointId = getInputData().getInt("id", 0);
+        try {
+            Context context = getApplicationContext();
+            String imageUrl = getInputData().getString("imageUrl");
+            Integer mapPointId = getInputData().getInt("id", 0);
 
-        EcoPathDataService service = getEcoPathDataService();
-        EcoPathDB db = getEcoPathDb(context);
+            EcoPathDataService service = getEcoPathDataService();
+            EcoPathDB db = getEcoPathDb(context);
 
-        File directory = getOrCreateDir(context, mapPointId.toString());
+            MapPoint mapPoint;
 
-        if (imageUrl != null) {
-            Call<ResponseBody> mainImageRequest = service.downloadImage(imageUrl);
-
-            String imagePath;
+            db.beginTransaction();
             try {
-                imagePath = saveFile(
-                        Objects.requireNonNull(mainImageRequest.execute().body()),
-                        directory,
-                        "mainImage.jpeg"
-                );
-
-                MapPoint mapPoint = db.mapPointDao().findById(mapPointId);
-                mapPoint.setImagePath(imagePath);
+                mapPoint = db.mapPointDao().findById(mapPointId);
+                mapPoint.setIsLoading(true);
                 db.mapPointDao().updateAll(mapPoint);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-                return Result.failure();
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
             }
-        }
+
+            File directory = getOrCreateDir(context, mapPointId.toString());
+
+            if (imageUrl != null) {
+                Call<ResponseBody> mainImageRequest = service.downloadImage(imageUrl);
+
+                String imagePath;
+                try {
+                    imagePath = saveFile(
+                            Objects.requireNonNull(mainImageRequest.execute().body()),
+                            directory,
+                            "mainImage.jpeg"
+                    );
+
+                    mapPoint.setImagePath(imagePath);
+                    db.mapPointDao().updateAll(mapPoint);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    return Result.failure();
+                }
+            }
 
 //          Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
 
-        Call<List<CategoryWithImages>> categoriesRequest = service.getCategories(mapPointId);
-        try {
-            Response<List<CategoryWithImages>> response = categoriesRequest.execute();
-            if (response.isSuccessful()) {
-                db.beginTransaction();
-                try {
-                    db.categoryDao().delete(mapPointId);
+            Call<List<CategoryWithImages>> categoriesRequest = service.getCategories(mapPointId);
+            try {
+                Response<List<CategoryWithImages>> response = categoriesRequest.execute();
+                if (response.isSuccessful()) {
+                    db.beginTransaction();
+                    try {
+                        db.categoryDao().delete(mapPointId);
+                        for (CategoryWithImages categoryWithImages : response.body()) {
+                            db.categoryDao().insert(categoryWithImages.category);
+                            db.imageDao().delete(categoryWithImages.category.getId());
+                        }
+                        db.setTransactionSuccessful();
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    } finally {
+                        db.endTransaction();
+                    }
+
                     for (CategoryWithImages categoryWithImages : response.body()) {
-                        db.categoryDao().insert(categoryWithImages.category);
-                        db.imageDao().delete(categoryWithImages.category.getId());
-                    }
-                    db.setTransactionSuccessful();
-                } catch (Exception e) {
-                    System.out.println(e);
-                } finally {
-                    db.endTransaction();
-                }
+                        Category category = categoryWithImages.category;
+                        Integer categoryId = category.getId();
 
-                for (CategoryWithImages categoryWithImages : response.body()) {
-                    Category category = categoryWithImages.category;
-                    Integer categoryId = category.getId();
-
-                    Call<ResponseBody> categorySmallImageRequest = service.downloadImage(
-                            category.getImageSmallUrl()
-                    );
-
-                    String categorySmallImagePath = saveFile(
-                            Objects.requireNonNull(categorySmallImageRequest.execute().body()),
-                            directory,
-                            "categorySmallImage" + categoryId + ".jpeg"
-                    );
-                    Call<ResponseBody> categoryBigImageRequest = service.downloadImage(
-                            category.getImageBigUrl()
-                    );
-
-                    saveFile(
-                            Objects.requireNonNull(categoryBigImageRequest.execute().body()),
-                            directory,
-                            "categoryBigImage" + categoryId + ".jpeg"
-                    );
-
-                    category.setImagePath(
-                            categorySmallImagePath
-                                    .replace("categorySmallImage" + categoryId + ".jpeg", "")
-                    );
-
-                    if (category.getAudioUrl() != null) {
-                        Call<ResponseBody> categoryAudioRequest = service.downloadImage(
-                                category.getAudioUrl()
+                        Call<ResponseBody> categorySmallImageRequest = service.downloadImage(
+                                category.getImageSmallUrl()
                         );
-                        String categoryAudioPath = saveFile(
-                                Objects.requireNonNull(categoryAudioRequest.execute().body()),
+
+                        String categorySmallImagePath = saveFile(
+                                Objects.requireNonNull(categorySmallImageRequest.execute().body()),
                                 directory,
-                                "categoryAudio" + categoryId + ".jpeg"
+                                "categorySmallImage" + categoryId + ".jpeg"
                         );
-                        category.setAudioPath(categoryAudioPath);
-                    }
+                        Call<ResponseBody> categoryBigImageRequest = service.downloadImage(
+                                category.getImageBigUrl()
+                        );
 
-                    db.categoryDao().update(category);
-                    Response<List<Image>> categoryImagesResponse = service
-                        .getCategoryImages(categoryId)
-                        .execute();
-                    if (categoryImagesResponse.isSuccessful()) {
-                        db.imageDao().delete(categoryId);
+                        saveFile(
+                                Objects.requireNonNull(categoryBigImageRequest.execute().body()),
+                                directory,
+                                "categoryBigImage" + categoryId + ".jpeg"
+                        );
 
-                        for (Image image : categoryImagesResponse.body()) {
-                            image.setCategoryId(categoryId);
-                            Call<ResponseBody> categoryGalleryImageRequest = service.downloadImage(
-                                image.getImageBigUrl()
+                        category.setImagePath(
+                                categorySmallImagePath
+                                        .replace("categorySmallImage" + categoryId + ".jpeg", "")
+                        );
+
+                        if (category.getAudioUrl() != null) {
+                            Call<ResponseBody> categoryAudioRequest = service.downloadImage(
+                                    category.getAudioUrl()
                             );
-
-                            String categoryGalleryImagePath = saveFile(
-                                    Objects.requireNonNull(categoryGalleryImageRequest.execute().body()),
+                            String categoryAudioPath = saveFile(
+                                    Objects.requireNonNull(categoryAudioRequest.execute().body()),
                                     directory,
-                                    "categoryGalleryImage" +
-                                            categoryId +
-                                            "image" + image.getId() + ".jpeg"
+                                    "categoryAudio" + categoryId + ".jpeg"
                             );
+                            category.setAudioPath(categoryAudioPath);
+                        }
 
-                            image.setImagePath(categoryGalleryImagePath);
-                            db.imageDao().insertImage(image);
+                        db.categoryDao().update(category);
+                        Response<List<Image>> categoryImagesResponse = service
+                                .getCategoryImages(categoryId)
+                                .execute();
+                        if (categoryImagesResponse.isSuccessful()) {
+                            db.imageDao().delete(categoryId);
+
+                            for (Image image : categoryImagesResponse.body()) {
+                                image.setCategoryId(categoryId);
+                                Call<ResponseBody> categoryGalleryImageRequest = service.downloadImage(
+                                        image.getImageBigUrl()
+                                );
+
+                                String categoryGalleryImagePath = saveFile(
+                                        Objects.requireNonNull(categoryGalleryImageRequest.execute().body()),
+                                        directory,
+                                        "categoryGalleryImage" +
+                                                categoryId +
+                                                "image" + image.getId() + ".jpeg"
+                                );
+
+                                image.setImagePath(categoryGalleryImagePath);
+                                db.imageDao().insertImage(image);
+                            }
                         }
                     }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
+                FirebaseCrashlytics.getInstance().recordException(e);
+                return Result.failure();
             }
-            return Result.success();
-        } catch (IOException e) {
+
+            db.beginTransaction();
+            try {
+                mapPoint.setIsLoading(false);
+                mapPoint.setIsLoaded(true);
+                db.mapPointDao().updateAll(mapPoint);
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-            return Result.failure(getInputData());
+            FirebaseCrashlytics.getInstance().recordException(e);
+            return Result.failure();
         }
+        return Result.success();
     }
 }

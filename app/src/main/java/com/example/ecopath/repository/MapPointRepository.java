@@ -52,7 +52,9 @@ public class MapPointRepository {
 
     public void updateIsLoaded(MapPoint mapPoint) {
         EcoPathDB.databaseWriteExecutor.execute(() -> {
-            mapPointDao.updateIsLoaded(mapPoint.getId(), mapPoint.getIsLoaded());
+            mapPointDao.updateIsLoadedAndIsLoading(
+                    mapPoint.getId(), mapPoint.getIsLoaded(), mapPoint.getIsLoading()
+            );
         });
     }
 

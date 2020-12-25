@@ -30,8 +30,8 @@ public interface MapPointDao {
     @Update
     void updateAll(MapPoint mapPoint);
 
-    @Query("UPDATE map_points_table SET isLoaded=:isLoaded WHERE id=:id")
-    void updateIsLoaded(Integer id, Boolean isLoaded);
+    @Query("UPDATE map_points_table SET isLoaded=:isLoaded, isLoading=:isLoading WHERE id=:id")
+    void updateIsLoadedAndIsLoading(Integer id, Boolean isLoaded, Boolean isLoading);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(MapPoint mapPoint);

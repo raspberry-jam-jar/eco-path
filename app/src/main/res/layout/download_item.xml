@@ -51,6 +51,18 @@
             android:layout_marginHorizontal="@dimen/default_margin"
             android:onClick="@{() ->  downloadCallback.onClick(mapPoint)}"
             android:src="@{mapPoint.isLoaded ? @drawable/ic_delete : @drawable/ic_download}"
+            visibleGone="@{mapPoint.getIsLoading ? false : true}"
+            app2:layout_constraintBottom_toBottomOf="parent"
+            app2:layout_constraintEnd_toEndOf="parent"
+            app2:layout_constraintTop_toTopOf="parent" />
+
+        <include
+            android:id="@+id/progress_bar"
+            layout="@layout/progress_bar"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginHorizontal="@dimen/default_margin"
+            visibleGone="@{mapPoint.getIsLoading ? true : false}"
             app2:layout_constraintBottom_toBottomOf="parent"
             app2:layout_constraintEnd_toEndOf="parent"
             app2:layout_constraintTop_toTopOf="parent" />
