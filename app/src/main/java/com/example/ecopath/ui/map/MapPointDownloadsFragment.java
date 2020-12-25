@@ -27,6 +27,7 @@ import com.example.ecopath.R;
 import com.example.ecopath.binding.FragmentDataBindingComponent;
 import com.example.ecopath.databinding.DownloadsFragmentBinding;
 import com.example.ecopath.di.Injectable;
+import com.example.ecopath.ui.common.DetectConnection;
 import com.example.ecopath.vo.MapPoint;
 import com.google.android.material.navigation.NavigationView;
 
@@ -107,6 +108,10 @@ public class MapPointDownloadsFragment extends Fragment implements Injectable {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+        if (!DetectConnection.checkInternetConnection(requireActivity())) {
+            Toast.makeText(getContext(), R.string.no_connection, Toast.LENGTH_SHORT).show();
+        }
 
         mapPointViewModel = ViewModelProviders
                 .of(requireActivity(), viewModelFactory)

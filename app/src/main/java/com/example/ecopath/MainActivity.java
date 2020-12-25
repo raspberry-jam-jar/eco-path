@@ -1,6 +1,7 @@
 package com.example.ecopath;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -8,7 +9,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
     private AppBarConfiguration appBarConfiguration;
     public NavController navController;
     public DrawerLayout drawer;
+    SharedPreferences prefs = null;
 
     @Inject
     DispatchingAndroidInjector<Object> androidInjector;
@@ -56,6 +60,31 @@ public class MainActivity extends AppCompatActivity implements HasAndroidInjecto
 
         navigationView.setNavigationItemSelectedListener(this);
 
+        prefs = getSharedPreferences("com.example.ecopath", MODE_PRIVATE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (prefs.getBoolean("firstrun", true)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.welcome_dialog_title);
+            builder.setMessage(R.string.welcome_dialog_message);
+            builder.setPositiveButton(R.string.welcome_ok, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    navController.navigate(R.id.mapPointDownloadsFragment);
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            prefs.edit().putBoolean("firstrun", false).apply();
+        }
     }
 
     @Override

@@ -43,7 +43,7 @@
         android:id="@+id/infoFragment"
         android:name="com.example.ecopath.ui.info.InfoFragment" />
     <fragment    
-	android:id="@+id/mapPointDownloadsFragment"
+	    android:id="@+id/mapPointDownloadsFragment"
         android:name="com.example.ecopath.ui.map.MapPointDownloadsFragment"
         android:label="@string/downloads_toolbar_title" />
 </navigation>
