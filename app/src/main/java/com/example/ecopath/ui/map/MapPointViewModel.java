@@ -3,6 +3,7 @@ package com.example.ecopath.ui.map;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.work.Data;
+import androidx.work.ExistingWorkPolicy;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
 import androidx.work.WorkInfo;
@@ -67,7 +68,11 @@ public class MapPointViewModel extends ViewModel {
 //        OneTimeWorkRequest cleanUpWorkRequest =
 //                new OneTimeWorkRequest.Builder(DeleteWorker.class).build();
 
-        WorkContinuation continuation = workManager.beginWith(downloadWorkRequest);
+        WorkContinuation continuation = workManager.beginUniqueWork(
+                "download_" + mapPoint.getId(),
+                ExistingWorkPolicy.KEEP,
+                downloadWorkRequest
+        );
 //        continuation = continuation.then(cleanUpWorkRequest);
         continuation.enqueue();
 
