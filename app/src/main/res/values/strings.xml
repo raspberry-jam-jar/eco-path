@@ -21,4 +21,7 @@
     <string name="museum_url">http://www.hutor-museum.ru/</string>
     <string name="loaded_title">Загруженые</string>
     <string name="to_be_loaded_title">Можно загрузить</string>
+    <string name="delete_dialog_message">"Удалить категорию "</string>
+    <string name="delete_ok">Удалить</string>
+    <string name="cancel">Отмена</string>
 </resources>
