@@ -1,6 +1,7 @@
 package com.example.ecopath.ui.map;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingComponent;
@@ -123,22 +125,40 @@ public class MapPointDownloadsFragment extends Fragment implements Injectable {
         @Override
         public void onClick(MapPoint mapPoint) {
             if (mapPoint.getIsLoaded()) {
-                UUID workerId = mapPointViewModel.deleteMapPoint(mapPoint);
 
-                mapPointViewModel.getOutputWorkInfo(workerId).observe(getViewLifecycleOwner(), workInfo -> {
-                    if (!workInfo.getState().isFinished()) {
-                        System.out.println("deleting");
-                    } else if (workInfo.getState() == SUCCEEDED) {
-                        mapPoint.setIsLoaded(false);
-                        mapPoint.setIsLoading(false);
-                        mapPointViewModel.updateIsLoaded(mapPoint);
-                        Toast.makeText(getContext(), "Удалено!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        mapPoint.setIsLoading(false);
-                        mapPointViewModel.updateIsLoaded(mapPoint);
-                        Toast.makeText(getContext(), "Не получилось удалить!", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(getString(R.string.delete_dialog_message) + "«" + mapPoint.getName() + "»?");
+
+                builder.setPositiveButton(R.string.delete_ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        UUID workerId = mapPointViewModel.deleteMapPoint(mapPoint);
+
+                        mapPointViewModel.getOutputWorkInfo(workerId).observe(getViewLifecycleOwner(), workInfo -> {
+                            if (!workInfo.getState().isFinished()) {
+                                System.out.println("deleting");
+                            } else if (workInfo.getState() == SUCCEEDED) {
+                                mapPoint.setIsLoaded(false);
+                                mapPoint.setIsLoading(false);
+                                mapPointViewModel.updateIsLoaded(mapPoint);
+                                Toast.makeText(getContext(), "Удалено!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                mapPoint.setIsLoading(false);
+                                mapPointViewModel.updateIsLoaded(mapPoint);
+                                Toast.makeText(getContext(), "Не получилось удалить...", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
             } else {
 
                 UUID workerId = mapPointViewModel.downloadMapPoint(mapPoint);
@@ -154,7 +174,7 @@ public class MapPointDownloadsFragment extends Fragment implements Injectable {
                     } else {
                         mapPoint.setIsLoading(false);
                         mapPointViewModel.updateIsLoaded(mapPoint);
-                        Toast.makeText(getContext(), "Не получилось загрузить!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Не получилось загрузить...", Toast.LENGTH_SHORT).show();
                     }
                 });
                 // TODO check permissions
