@@ -191,16 +191,29 @@ public class DownloadWorker extends Worker {
                     Category category = categoryWithImages.category;
                     Integer categoryId = category.getId();
 
-                    Call<ResponseBody> categoryImageRequest = service.downloadImage(
+                    Call<ResponseBody> categorySmallImageRequest = service.downloadImage(
                             category.getImageSmallUrl()
                     );
 
-                    String categoryImagePath = saveFile(
-                            Objects.requireNonNull(categoryImageRequest.execute().body()),
+                    String categorySmallImagePath = saveFile(
+                            Objects.requireNonNull(categorySmallImageRequest.execute().body()),
                             directory,
                             "categorySmallImage" + categoryId + ".jpeg"
                     );
-                    category.setImagePath(categoryImagePath);
+                    Call<ResponseBody> categoryBigImageRequest = service.downloadImage(
+                            category.getImageBigUrl()
+                    );
+
+                    saveFile(
+                            Objects.requireNonNull(categoryBigImageRequest.execute().body()),
+                            directory,
+                            "categoryBigImage" + categoryId + ".jpeg"
+                    );
+
+                    category.setImagePath(
+                            categorySmallImagePath
+                                    .replace("categorySmallImage" + categoryId + ".jpeg", "")
+                    );
 
                     if (category.getAudioUrl() != null) {
                         Call<ResponseBody> categoryAudioRequest = service.downloadImage(

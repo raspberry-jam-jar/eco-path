@@ -52,6 +52,8 @@ public class MapPoint implements BaseModel {
     public Float getLatitude(){ return this.mLatitude; }
     public Float getLongitude(){ return this.mLongitude; }
     public String getImageSmallUrl() { return imageSmallUrl; }
+    @Override
+    public String getImageBigUrl() { return null; }
     public Double getFullSize() { return fullSize; }
     public Boolean getIsLoaded() { return isLoaded; }
     public String getImagePath() { return this.imagePath; }
@@ -68,7 +70,7 @@ public class MapPoint implements BaseModel {
     }
 
     @Override
-    public String getPath() {
+    public String getPath(String imageSize) {
         if (this.isLoaded && this.imagePath != null) {
             return this.imagePath;
         } else {

@@ -46,11 +46,12 @@ public class Category implements BaseModel {
     public Integer getPointId() { return pointId; }
     public String getImagePath() { return imagePath; }
     @Override
-    public String getPath() {
+    public String getPath(String imageSize) {
         if (imagePath == null){
             return "";
         }
-        return imagePath;
+        String name = imageSize.equals("small") ? "categorySmallImage" : "categoryBigImage";
+        return imagePath + name + id + ".jpeg";
     }
 
     public String getImageSmallUrl() { return imageSmallUrl; }
