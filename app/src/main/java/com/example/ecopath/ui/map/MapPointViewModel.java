@@ -54,6 +54,9 @@ public class MapPointViewModel extends ViewModel {
     public LiveData<List<MapPoint>> getToBeLoadedMapPoint() {return mapPointRepository.getToBeLoadedMapPoints();}
 
     public UUID downloadMapPoint(MapPoint mapPoint) {
+        mapPoint.setIsLoading(true);
+        update(mapPoint);
+
         Data.Builder builder = new Data.Builder();
         builder.putInt("id", mapPoint.getId());
         builder.putString("imageUrl", mapPoint.getImageSmallUrl());
@@ -80,6 +83,9 @@ public class MapPointViewModel extends ViewModel {
     }
 
     public UUID deleteMapPoint(MapPoint mapPoint) {
+        mapPoint.setIsLoading(true);
+        update(mapPoint);
+
         Data.Builder builder = new Data.Builder();
         builder.putInt("id", mapPoint.getId());
 

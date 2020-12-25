@@ -22,6 +22,8 @@ public class MapPoint implements BaseModel {
     private Double fullSize;
     @ColumnInfo(defaultValue="0")
     private Boolean isLoaded;
+    @ColumnInfo(defaultValue="0")
+    private Boolean isLoading;
     private String imagePath;
 
 
@@ -45,6 +47,7 @@ public class MapPoint implements BaseModel {
     public void setImageSmallUrl(String imageSmallUrl) { this.imageSmallUrl = imageSmallUrl; }
     public void setFullSize(Double fullSize) { this.fullSize = fullSize; }
     public void setIsLoaded(Boolean loaded) { this.isLoaded = loaded; }
+    public void setIsLoading(Boolean loading) { this.isLoading = loading; }
     public void setImagePath(String path) {this.imagePath = path;}
 
     public int getId(){ return this.mId; }
@@ -56,6 +59,7 @@ public class MapPoint implements BaseModel {
     public String getImageBigUrl() { return null; }
     public Double getFullSize() { return fullSize; }
     public Boolean getIsLoaded() { return isLoaded; }
+    public Boolean getIsLoading() { return isLoading; }
     public String getImagePath() { return this.imagePath; }
 
     public String getSizeReadable() {
