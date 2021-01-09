@@ -5,4 +5,5 @@
     <color name="colorAccent">#47966C</color>
     <color name="colorGradientEnd">#27946D</color>
     <color name="colorGradientStart">#4FB420</color>
+    <color name="colorWhite">@android:color/white</color>
 </resources>

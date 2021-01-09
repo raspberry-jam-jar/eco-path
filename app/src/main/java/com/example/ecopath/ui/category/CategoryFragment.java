@@ -44,6 +44,9 @@ import com.example.ecopath.ui.image.ImageFragment;
 import com.example.ecopath.ui.image.ImageViewModel;
 import com.example.ecopath.ui.image.ImagesListAdapter;
 import com.example.ecopath.vo.Image;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
@@ -91,6 +94,12 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
         adapter = new ImagesListAdapter(dataBindingComponent);
         adapter.setCallback(imageClickCallback);
         binding.imagesList.setAdapter(adapter);
+
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+
+        binding.imagesList.setLayoutManager(layoutManager);
 
         fab = (ImageButton) viewRoot.findViewById(R.id.fab);
         seekBar = (SeekBar) viewRoot.findViewById(R.id.seekbar);
