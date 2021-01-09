@@ -11,10 +11,8 @@
         android:layout_width="150dp"
         android:layout_height="180dp"
         card_view:cardCornerRadius="10dp"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginHorizontal="2dp"
+        android:layout_marginVertical="@dimen/default_margin"
         android:onClick="@{() ->  categoryClickCallback.onClick(categoryWithImages)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout

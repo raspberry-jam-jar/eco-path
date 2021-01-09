@@ -29,6 +29,9 @@ import com.example.ecopath.databinding.CategoriesListFragmentBinding;
 import com.example.ecopath.di.Injectable;
 import com.example.ecopath.ui.common.DetectConnection;
 import com.example.ecopath.vo.CategoryWithImages;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.navigation.NavigationView;
 
 import javax.inject.Inject;
@@ -68,6 +71,10 @@ public class CategoriesListFragment extends Fragment implements Injectable {
         adapter = new CategoriesListAdapter(dataBindingComponent);
         adapter.setCallback(categoryClickCallback);
         binding.categoriesList.setAdapter(adapter);
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        layoutManager.setJustifyContent(JustifyContent.SPACE_AROUND);
+        binding.categoriesList.setLayoutManager(layoutManager);
 
         View viewRoot = binding.getRoot();
         assert getArguments() != null;

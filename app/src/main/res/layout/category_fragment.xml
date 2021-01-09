@@ -97,9 +97,6 @@
                     android:layout_marginHorizontal="5dp"
                     tools:listitem="@layout/image_item"
                     android:scrollbars="vertical"
-                    app:layoutManager="GridLayoutManager"
-                    app:spanCount="3"
-                    android:gravity="center"
                     app:layout_constraintTop_toBottomOf="@id/preview"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -148,6 +145,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="21dp"
+                    android:thumbTint="@android:color/white"
                     app:layout_constraintEnd_toStartOf="@+id/seekBarHint"
                     app:layout_constraintStart_toEndOf="@id/fab"
                     app:layout_constraintTop_toTopOf="parent" />
