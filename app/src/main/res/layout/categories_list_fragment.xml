@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <data>
-        <import type="com.example.ecopath.vo.CategoryWithImages"/>
+        <import type="com.teplica.ecopath.vo.CategoryWithImages"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:orientation="vertical"
