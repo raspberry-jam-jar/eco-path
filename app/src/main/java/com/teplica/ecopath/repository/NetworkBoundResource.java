@@ -54,7 +54,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
             result.removeSource(dbSource);
             //noinspection ConstantConditions
             if (response.isSuccessful()) {
-//                result.setValue(Resource.success(response.body));
                 appExecutors.diskIO().execute(() -> {
                     saveCallResult(processResponse(response));
                     appExecutors.mainThread().execute(() ->

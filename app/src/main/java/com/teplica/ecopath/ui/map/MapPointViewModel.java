@@ -33,9 +33,6 @@ public class MapPointViewModel extends ViewModel {
     public MapPointViewModel(MapPointRepository mapPointRepository, WorkManager workManager) {
         this.mapPointRepository = mapPointRepository;
         this.workManager = workManager;
-//        mAllMapPoints = mapPointRepository.getAllMapPoints();
-//        loadedMapPoints = mapPointRepository.getLoadedMapPoints();
-//        toBeLoadedMapPoints = mapPointRepository.getToBeLoadedMapPoints();
     }
 
     LiveData<WorkInfo> getOutputWorkInfo(UUID workerId) {
@@ -67,15 +64,11 @@ public class MapPointViewModel extends ViewModel {
                         .setInputData(mapPointData)
                         .build();
 
-//        OneTimeWorkRequest cleanUpWorkRequest =
-//                new OneTimeWorkRequest.Builder(DeleteWorker.class).build();
-
         WorkContinuation continuation = workManager.beginUniqueWork(
                 "download_" + mapPoint.getId(),
                 ExistingWorkPolicy.KEEP,
                 downloadWorkRequest
         );
-//        continuation = continuation.then(cleanUpWorkRequest);
         continuation.enqueue();
 
         return downloadWorkRequest.getId();

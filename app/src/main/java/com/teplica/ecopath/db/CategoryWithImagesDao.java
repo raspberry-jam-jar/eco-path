@@ -13,5 +13,5 @@ import java.util.List;
 public interface CategoryWithImagesDao {
     @Transaction
     @Query("SELECT * FROM category WHERE pointId=:mapPointId")
-    public LiveData<List<CategoryWithImages>> getAll(Integer mapPointId);
+    LiveData<List<CategoryWithImages>> getAll(Integer mapPointId);
 }

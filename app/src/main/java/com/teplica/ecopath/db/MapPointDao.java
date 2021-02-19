@@ -14,10 +14,10 @@ import java.util.List;
 @Dao
 public interface MapPointDao {
     @Query("SELECT * from map_points_table")
-    public LiveData<List<MapPoint>> getMapPoints();
+    LiveData<List<MapPoint>> getMapPoints();
 
     @Query("SELECT * from map_points_table WHERE isLoaded=:isLoaded")
-    public LiveData<List<MapPoint>> filterLoaded(Boolean isLoaded);
+    LiveData<List<MapPoint>> filterLoaded(Boolean isLoaded);
 
     @Query("SELECT * from map_points_table WHERE id=:id")
     MapPoint findById(Integer id);
