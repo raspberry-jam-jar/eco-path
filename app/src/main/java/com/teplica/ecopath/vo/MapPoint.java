@@ -26,11 +26,6 @@ public class MapPoint implements BaseModel {
     private Boolean isLoading;
     private String imagePath;
 
-
-//    @Ignore
-//    Bitmap picture;
-
-
     public MapPoint(int id, @NonNull String name, @NonNull Float latitude, @NonNull Float longitude,
                     Double fullSize) {
         this.mId = id;

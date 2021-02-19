@@ -182,9 +182,7 @@ public class MapPointDownloadsFragment extends Fragment implements Injectable {
                         Toast.makeText(getContext(), "Не получилось загрузить...", Toast.LENGTH_SHORT).show();
                     }
                 });
-                // TODO check permissions
             }
-
         }
     };
 }

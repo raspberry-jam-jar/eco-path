@@ -89,25 +89,16 @@ public class DownloadWorker extends Worker {
         byte data[] = new byte[1024 * 4];
         long fileSize = body.contentLength();
         InputStream inputStream = new BufferedInputStream(body.byteStream(), 1024 * 8);
-//        File outputFile = new File(Environment.getExternalStoragePublicDirectory(
-//        Environment.DIRECTORY_DOWNLOADS), "journaldev-image-downloaded.jpg");
         File outputFile = new File(directory, fileName);
         OutputStream outputStream = new FileOutputStream(outputFile);
         long total = 0;
-//        boolean downloadComplete = false;
-//        int totalFileSize = (int) (fileSize / (Math.pow(1024, 2)));
 
         while ((count = inputStream.read(data)) != -1) {
 
             total += count;
             int progress = (int) ((double) (total * 100) / (double) fileSize);
-
-
-//            updateNotification(progress);
             outputStream.write(data, 0, count);
-//            downloadComplete = true;
         }
-//        onDownloadComplete(downloadComplete);
         outputStream.flush();
         outputStream.close();
         inputStream.close();
@@ -168,8 +159,6 @@ public class DownloadWorker extends Worker {
                     return Result.failure();
                 }
             }
-
-//          Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
 
             Call<List<CategoryWithImages>> categoriesRequest = service.getCategories(mapPointId);
             try {
