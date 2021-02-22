@@ -334,10 +334,11 @@ public class CategoryFragment extends Fragment implements Injectable, Runnable {
     private final ImageClickCallback imageClickCallback = new ImageClickCallback() {
         @Override
         public void onClick(Image image) {
-            imageViewModel.select(image);
+            imageViewModel.setStartPosition(adapter.getImagePosition(image));
+            imageViewModel.setCount(adapter.getItemCount());
 
             Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-                    .navigate(R.id.imageFragment);
+                    .navigate(R.id.galleryFragment);
         }
     };
 }

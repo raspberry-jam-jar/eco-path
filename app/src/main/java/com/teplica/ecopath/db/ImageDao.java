@@ -26,7 +26,4 @@ public interface ImageDao {
 
     @Query("DELETE from Image WHERE categoryId=:categoryId and id NOT IN (:actualIds)")
     void deleteOutdated(Integer categoryId, List<Integer> actualIds);
-
-    @Query("DELETE from Image WHERE categoryId NOT IN (:actualCategoriesIds)")
-    void deleteForOutdatedCategories(List<Integer> actualCategoriesIds);
 }

@@ -32,9 +32,13 @@
         android:name="com.teplica.ecopath.ui.category.CategoryFragment"
         tools:layout="@layout/category_fragment" >
         <action
-            android:id="@+id/action_categoryFragment_to_imageFragment"
-            app:destination="@id/imageFragment" />
+            android:id="@+id/action_categoryFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="com.teplica.ecopath.ui.image.GalleryFragment"
+        android:label="GalleryFragment" />
     <fragment
         android:id="@+id/imageFragment"
         android:name="com.teplica.ecopath.ui.image.ImageFragment"

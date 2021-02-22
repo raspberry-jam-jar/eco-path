@@ -2,6 +2,7 @@ package com.teplica.ecopath.di;
 
 import com.teplica.ecopath.ui.category.CategoriesListFragment;
 import com.teplica.ecopath.ui.category.CategoryFragment;
+import com.teplica.ecopath.ui.image.GalleryFragment;
 import com.teplica.ecopath.ui.image.ImageFragment;
 import com.teplica.ecopath.ui.map.MapFragment;
 import com.teplica.ecopath.ui.map.MapPointDownloadsFragment;
@@ -25,4 +26,7 @@ public abstract class FragmentBuildersModule {
 
     @ContributesAndroidInjector
     abstract MapPointDownloadsFragment contributeMapPointDownloadsFragment();
+
+    @ContributesAndroidInjector
+    abstract GalleryFragment contributeGalleryFragment();
 }

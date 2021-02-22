@@ -47,6 +47,10 @@ public class ImagesListAdapter extends RecyclerView.Adapter<ImagesListAdapter.Im
         else return 0;
     }
 
+    public int getImagePosition(Image image) {
+        return this.imagesList.indexOf(image);
+    }
+
     public void setImagesList(List<Image> imagesList) {
         this.imagesList = imagesList;
         notifyDataSetChanged();

@@ -18,6 +18,7 @@ import com.teplica.ecopath.R;
 import com.teplica.ecopath.binding.FragmentDataBindingComponent;
 import com.teplica.ecopath.databinding.ImageFragmentBinding;
 import com.teplica.ecopath.di.Injectable;
+import com.teplica.ecopath.ui.common.DetectConnection;
 
 import javax.inject.Inject;
 
@@ -33,6 +34,14 @@ public class ImageFragment  extends Fragment implements Injectable {
     ViewModelProvider.Factory viewModelFactory;
 
     private ImageViewModel imageViewModel;
+
+    public static ImageFragment newInstance(int page) {
+        ImageFragment fragment = new ImageFragment();
+        Bundle args = new Bundle();
+        args.putInt("page", page);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -63,9 +72,24 @@ public class ImageFragment  extends Fragment implements Injectable {
                 .of(requireActivity(), viewModelFactory)
                 .get(ImageViewModel.class);
 
-        imageViewModel.getSelected().observe(getViewLifecycleOwner(), image -> {
-            progressBar.setVisibility(View.GONE);
-            binding.setImage(image);
-        });
+        int pageNumber = getArguments() != null ? getArguments().getInt("page") : 0;
+
+        if (!DetectConnection.checkInternetConnection(requireActivity())) {
+            imageViewModel.loadFromDb().observe(getViewLifecycleOwner(), images -> {
+                progressBar.setVisibility(View.GONE);
+                if (images != null && images.size() > pageNumber) {
+                    binding.setImage(images.get(pageNumber));
+                }
+            });
+        } else {
+            imageViewModel.getAllImages().observe(getViewLifecycleOwner(), resource -> {
+                if (resource.status.name().equals("SUCCESS")) {
+                    progressBar.setVisibility(View.GONE);
+                    if (resource.data != null && resource.data.size() > pageNumber) {
+                        binding.setImage(resource.data.get(pageNumber));
+                    }
+                }
+            });
+        }
     }
 }

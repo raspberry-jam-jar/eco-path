@@ -27,6 +27,10 @@ public class FragmentBindingAdapters {
 
     @BindingAdapter(value={"app:imageSrc", "app:imageSize"})
     public void bindLocalImage(ImageView imageView, BaseModel instance, String imageSize) {
+        if (instance == null) {
+            return;
+        }
+
         String path = instance.getPath(imageSize);
         File imgFile = new File(path);
 
