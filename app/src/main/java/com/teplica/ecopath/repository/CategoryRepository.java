@@ -11,7 +11,6 @@ import com.teplica.ecopath.api.EcoPathDataService;
 import com.teplica.ecopath.db.CategoryDao;
 import com.teplica.ecopath.db.CategoryWithImagesDao;
 import com.teplica.ecopath.db.EcoPathDB;
-import com.teplica.ecopath.db.ImageDao;
 import com.teplica.ecopath.util.AbsentLiveData;
 import com.teplica.ecopath.vo.Category;
 import com.teplica.ecopath.vo.CategoryWithImages;
@@ -28,18 +27,16 @@ public class CategoryRepository {
     private final EcoPathDB db;
     private final CategoryWithImagesDao categoryWithImagesDao;
     private final CategoryDao categoryDao;
-    private final ImageDao imageDao;
     private final EcoPathDataService ecoPathDataService;
     private final AppExecutors appExecutors;
 
     @Inject
-    public CategoryRepository(AppExecutors appExecutors, EcoPathDB db, ImageDao imageDao,
+    public CategoryRepository(AppExecutors appExecutors, EcoPathDB db,
                               CategoryWithImagesDao categoryWithImagesDao,
                               CategoryDao categoryDao, EcoPathDataService ecoPathDataService) {
         this.db = db;
         this.categoryWithImagesDao = categoryWithImagesDao;
         this.categoryDao = categoryDao;
-        this.imageDao = imageDao;
         this.appExecutors = appExecutors;
         this.ecoPathDataService = ecoPathDataService;
     }
@@ -79,7 +76,6 @@ public class CategoryRepository {
                         }
                     }
                     categoryDao.deleteOutdated(mapPointId, actualIds);
-                    imageDao.deleteForOutdatedCategories(actualIds);
                     db.setTransactionSuccessful();
                 }
                 catch (Exception e){
