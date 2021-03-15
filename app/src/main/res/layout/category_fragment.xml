@@ -24,12 +24,17 @@
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:fitsSystemWindows="true"
+                    app:contentScrim="@drawable/action_bar_bg"
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                    app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
                     app:expandedTitleMarginStart="@dimen/default_big_margin"
                     app:expandedTitleMarginBottom="@dimen/default_big_margin">
 
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
+                        android:fitsSystemWindows="true"
                         app:imageSrc="@{categoryWithImages.category}"
                         app:imageSize="@{`big`}"
                         android:scaleType="centerCrop"
@@ -56,28 +61,30 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:popupTheme="@style/AppTheme.PopupOverlay"
                         android:title="@{categoryWithImages.category.name}"
-                        android:background="@android:color/transparent"/>
+                        android:background="@android:color/transparent"
+                        app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                        app:layout_collapseMode="pin" />
 
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
             </com.google.android.material.appbar.AppBarLayout>
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scrollbars="none"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/preview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/default_big_margin"
-                    app:htmlText="@{categoryWithImages.category.preview}"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:htmlText="@{categoryWithImages.category.preview}" />
 
                 <include
                     android:id="@+id/progress_bar"
@@ -85,9 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:layout_margin="66dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/preview" />
+                    android:layout_margin="66dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/images_list"
@@ -96,9 +101,7 @@
                     android:layout_marginVertical="@dimen/default_big_margin"
                     android:layout_marginHorizontal="5dp"
                     tools:listitem="@layout/image_item"
-                    android:scrollbars="vertical"
-                    app:layout_constraintTop_toBottomOf="@id/preview"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    android:scrollbars="vertical" />
 
                 <TextView
                     android:id="@+id/description"
@@ -106,11 +109,10 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/default_big_margin"
                     app:htmlText="@{categoryWithImages.category.description}"
-                    app:layout_constraintTop_toBottomOf="@id/images_list"
                     android:paddingBottom="100dp"/>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
