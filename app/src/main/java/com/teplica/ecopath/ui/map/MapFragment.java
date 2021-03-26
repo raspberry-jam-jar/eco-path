@@ -72,6 +72,7 @@ public class MapFragment extends Fragment implements Injectable, OnMapReadyCallb
 
         appToolbar = (Toolbar) rootView.findViewById(R.id.app_toolbar);
         appToolbar.setTitle(R.string.main_toolbar_title);
+        appToolbar.setTitleTextAppearance(getContext(), R.style.ToolbarMainTitleTheme);
         appToolbar.setSubtitle(R.string.main_toolbar_subtitle);
 
         setUpToolbar();
