@@ -8,10 +8,10 @@
         <variable name="categoryClickCallback" type="com.teplica.ecopath.ui.category.CategoryClickCallback"/>
     </data>
     <androidx.cardview.widget.CardView
-        android:layout_width="150dp"
+        android:layout_width="@dimen/category_card_width"
         android:layout_height="180dp"
         card_view:cardCornerRadius="10dp"
-        android:layout_marginHorizontal="2dp"
+        android:layout_marginHorizontal="@dimen/category_card_margin"
         android:layout_marginVertical="@dimen/default_margin"
         android:onClick="@{() ->  categoryClickCallback.onClick(categoryWithImages)}">
 

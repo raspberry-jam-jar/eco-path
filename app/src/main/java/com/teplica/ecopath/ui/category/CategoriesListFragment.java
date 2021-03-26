@@ -2,6 +2,7 @@ package com.teplica.ecopath.ui.category;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.teplica.ecopath.R;
 import com.teplica.ecopath.binding.FragmentDataBindingComponent;
@@ -29,9 +31,6 @@ import com.teplica.ecopath.databinding.CategoriesListFragmentBinding;
 import com.teplica.ecopath.di.Injectable;
 import com.teplica.ecopath.ui.common.DetectConnection;
 import com.teplica.ecopath.vo.CategoryWithImages;
-import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexboxLayoutManager;
-import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.navigation.NavigationView;
 
 import javax.inject.Inject;
@@ -71,10 +70,6 @@ public class CategoriesListFragment extends Fragment implements Injectable {
         adapter = new CategoriesListAdapter(dataBindingComponent);
         adapter.setCallback(categoryClickCallback);
         binding.categoriesList.setAdapter(adapter);
-        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
-        layoutManager.setFlexDirection(FlexDirection.ROW);
-        layoutManager.setJustifyContent(JustifyContent.SPACE_AROUND);
-        binding.categoriesList.setLayoutManager(layoutManager);
 
         View viewRoot = binding.getRoot();
         assert getArguments() != null;
@@ -122,6 +117,7 @@ public class CategoriesListFragment extends Fragment implements Injectable {
             categoryViewModel.loadFromDb().observe(getViewLifecycleOwner(), categories -> {
                 if (categories !=null && !categories.isEmpty()) {
                     adapter.setCategoriesList(categories);
+                    setSpanCount(categories.size());
                 } else {
                     Toast.makeText(
                         getContext(), R.string.no_connection, Toast.LENGTH_SHORT
@@ -134,12 +130,32 @@ public class CategoriesListFragment extends Fragment implements Injectable {
                 if (!resource.status.name().equals("LOADING")) {
                     progressBar.setVisibility(View.GONE);
                     adapter.setCategoriesList(resource.data);
+                    setSpanCount(resource.data.size());
                 } else if (resource.status.name().equals("ERROR")) {
                     Toast.makeText(getContext(), resource.message, Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                 }
             });
         }
+    }
+
+    private void setSpanCount(int itemsCount){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        int spanCount = (int) Math.floor(
+                (width-getResources().getDimension(R.dimen.categories_list_padding)*2) /
+                        (getResources().getDimension(R.dimen.category_card_width)+
+                                getResources().getDimension(R.dimen.category_card_margin)*2)
+        );
+
+        if (spanCount > itemsCount) {
+            spanCount = itemsCount;
+        } else if (spanCount == 0) {
+            spanCount = 1;
+        }
+
+        ((GridLayoutManager) binding.categoriesList.getLayoutManager()).setSpanCount(spanCount);
     }
 
     private final CategoryClickCallback categoryClickCallback = new CategoryClickCallback() {

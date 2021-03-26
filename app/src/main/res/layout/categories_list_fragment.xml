@@ -29,10 +29,12 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/categories_list"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/default_big_margin"
-                android:scrollbars="vertical"
+                android:layout_gravity="center_horizontal"
+                android:paddingHorizontal="@dimen/categories_list_padding"
+                app:layoutManager="GridLayoutManager"
+                app:spanCount="2"
                 tools:listitem="@layout/category_item" />
         </LinearLayout>
     </LinearLayout>
