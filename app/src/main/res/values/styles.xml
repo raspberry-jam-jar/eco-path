@@ -16,6 +16,9 @@
         <item name="colorAccent">@color/colorPrimary</item> <!-- Whatever color you want-->
     </style>
 
+    <style name="ToolbarMainTitleTheme">
+        <item name="android:fontFamily">@font/lora_bold</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
