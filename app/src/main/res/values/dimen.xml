@@ -2,4 +2,7 @@
 <resources>
     <dimen name="default_margin">8dp</dimen>
     <dimen name="default_big_margin">16dp</dimen>
+    <dimen name="categories_list_padding">4dp</dimen>
+    <dimen name="category_card_width">150dp</dimen>
+    <dimen name="category_card_margin">2dp</dimen>
 </resources>
