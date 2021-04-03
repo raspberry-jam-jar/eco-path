@@ -24,6 +24,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.teplica.ecopath.R;
 import com.teplica.ecopath.di.Injectable;
 import com.teplica.ecopath.ui.common.DetectConnection;
@@ -128,6 +129,7 @@ public class MapFragment extends Fragment implements Injectable, OnMapReadyCallb
                     Marker mapPointMarker = mMap.addMarker(
                             new MarkerOptions()
                                     .position(pointCoordinates)
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                                     .title(mapPoint.getName().toUpperCase())
                     );
                     mapPointMarker.setTag(mapPoint.getId());
